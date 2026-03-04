@@ -1145,7 +1145,7 @@ body {
   line-height: 2;
 }
 .review-notes .review-body li::before {
-  content: '•';
+  content: '\u2022';
   color: var(--accent);
   position: absolute;
   right: 0;
@@ -1218,23 +1218,35 @@ body {
   z-index: 1;
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text-primary);
+}
+.summary-score-inner span {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: -4px;
 }
 .summary-stats {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
 }
 .summary-stat-item {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
-.summary-stat-num {
+.summary-stat-item .stat-val {
   font-size: 1.25rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-.summary-stat-label {
+.summary-stat-item .stat-val.green { color: var(--correct); }
+.summary-stat-item .stat-val.red { color: var(--incorrect); }
+.summary-stat-item .stat-val.teal { color: var(--accent); }
+.summary-stat-item .stat-lbl {
   font-size: 0.6875rem;
   color: var(--text-muted);
 }
@@ -1244,1374 +1256,949 @@ body {
   justify-content: center;
   flex-wrap: wrap;
 }
-.summary-btn {
-  padding: 10px 20px;
+.summary-action-btn {
+  padding: 10px 22px;
   border-radius: var(--radius-md);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   font-family: var(--font);
   cursor: pointer;
   transition: all var(--transition);
-  border: 1px solid var(--border);
+  border: none;
   min-height: 44px;
 }
-.summary-btn-primary {
+.summary-action-btn.primary {
   background: var(--accent);
-  color: var(--bg-primary);
-  border-color: var(--accent);
+  color: #0a0f1e;
 }
-.summary-btn-primary:hover { background: var(--accent-hover); }
-.summary-btn-secondary {
-  background: none;
+.summary-action-btn.primary:hover { background: var(--accent-hover); }
+.summary-action-btn.secondary {
+  background: var(--bg-card-hover);
   color: var(--text-primary);
-}
-.summary-btn-secondary:hover { background: var(--bg-card-hover); }
-
-/* ===== RESET BUTTON ===== */
-.reset-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: none;
-  border: 1px solid var(--incorrect-border);
-  border-radius: var(--radius-md);
-  color: var(--incorrect);
-  font-size: 0.75rem;
-  font-weight: 500;
-  font-family: var(--font);
-  cursor: pointer;
-  transition: all var(--transition);
-}
-.reset-btn:hover { background: var(--incorrect-bg); }
-
-/* ===== EXPLANATION TABS ===== */
-.explanation-tabs {
-  display: flex;
-  gap: 6px;
-  padding: 10px 14px;
-  background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  margin-bottom: 10px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
-.exp-tab {
-  flex: 1;
-  min-width: 0;
-  padding: 9px 10px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 0.78rem;
-  font-weight: 600;
-  font-family: var(--font);
-  cursor: pointer;
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  white-space: nowrap;
-  text-align: center;
-}
-.exp-tab:hover {
-  background: rgba(255,255,255,0.04);
-  color: var(--text-primary);
-}
-.exp-tab.active {
-  background: rgba(56,189,176,0.12);
-  border-color: rgba(56,189,176,0.4);
-  color: var(--accent);
-}
+.summary-action-btn.secondary:hover { border-color: rgba(255,255,255,0.2); }
 
-/* Tab panels */
-.exp-panel {
-  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Teacher explanation panel */
-.teacher-exp-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  padding: 16px 18px 8px;
-  line-height: 1.8;
-  border-bottom: 2px solid rgba(56,189,176,0.2);
-  margin-bottom: 8px;
-}
-.teacher-exp-body {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 2;
-  padding: 12px 18px 18px;
-  text-align: right;
-}
-
-/* Review notes panel */
-.review-notes-pro {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 0;
-  overflow: hidden;
-}
-.review-notes-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  padding: 14px 18px 10px;
-  border-bottom: 2px solid rgba(56,189,176,0.2);
-  line-height: 1.8;
-}
-.review-group {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  line-height: 2;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-.review-group:last-child { border-bottom: none; }
-.review-group strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-}
-.review-group ul {
-  margin: 0;
-  padding-right: 20px;
-  padding-left: 0;
-  list-style: disc;
-}
-.review-group ul li {
-  margin-bottom: 4px;
-  line-height: 1.9;
-}
-.positive-group {
-  border-right: 3px solid var(--correct);
-}
-.negative-group {
-  border-right: 3px solid var(--incorrect);
-}
-.review-general {
-  margin: 0;
-  padding: 14px 18px;
-  padding-right: 36px;
-  list-style: disc;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 2;
-}
-.review-general li {
-  margin-bottom: 4px;
-}
-.review-key-tip {
-  padding: 12px 18px;
-  background: rgba(245,158,11,0.08);
-  border-top: 1px solid rgba(245,158,11,0.2);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #f59e0b;
-  line-height: 1.9;
-}
-
-@media (max-width: 520px) {
-  .explanation-tabs { gap: 4px; padding: 8px 10px; }
-  .exp-tab { font-size: 0.7rem; padding: 8px 6px; }
-  .teacher-exp-title { font-size: 0.9rem; padding: 12px 14px 6px; }
-  .teacher-exp-body { font-size: 0.82rem; padding: 10px 14px 14px; }
-  .review-notes-title { font-size: 0.85rem; padding: 12px 14px 8px; }
-  .review-group { padding: 10px 14px; font-size: 0.8rem; }
-  .review-general { padding: 10px 14px; font-size: 0.8rem; }
-  .review-key-tip { padding: 10px 14px; font-size: 0.8rem; }
-}
-
-/* ===== QUESTION EXPLAIN BUTTON ===== */
-.q-explain-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(168,85,247,0.35);
-  background: rgba(168,85,247,0.08);
-  color: #c084fc;
-  font-size: 0.82rem;
-  font-weight: 600;
-  font-family: var(--font);
-  cursor: pointer;
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.q-explain-btn:hover {
-  background: rgba(168,85,247,0.15);
-  border-color: rgba(168,85,247,0.5);
-}
-.q-explain-btn.active {
-  background: rgba(168,85,247,0.18);
-  border-color: rgba(168,85,247,0.5);
-  color: #d8b4fe;
-}
-.q-explain-panel {
-  margin-top: 12px;
-  padding: 16px 18px;
-  background: rgba(168,85,247,0.06);
-  border: 1px solid rgba(168,85,247,0.2);
-  border-radius: var(--radius-lg);
-  border-right: 3px solid #a855f7;
-  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.q-explain-content {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 2.1;
-  text-align: right;
-}
-@media (max-width: 520px) {
-  .q-explain-btn { font-size: 0.75rem; padding: 7px 12px; }
-  .q-explain-content { font-size: 0.82rem; }
-}
 </style>
 </head>
 <body>
-
 <div class="app">
-  <!-- Sidebar (Desktop) -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect width="28" height="28" rx="7" fill="rgba(56,189,176,0.15)"/>
-        <path d="M9 14.5L13 18.5L19 10.5" stroke="#38bdb0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>مراجعة التخدير</span>
-    </div>
-    <button class="sidebar-item active" onclick="navigateTo('chapters')" data-nav="chapters">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      الفصول
-    </button>
-    <button class="sidebar-item" onclick="navigateTo('quiz')" data-nav="quiz">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      الاختبار
-    </button>
-    <button class="sidebar-item" onclick="navigateTo('search')" data-nav="search">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      البحث
-    </button>
-    <button class="sidebar-item" onclick="navigateTo('bookmarks')" data-nav="bookmarks">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-      المحفوظات
-    </button>
-    <button class="sidebar-item" onclick="navigateTo('score')" data-nav="score">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      النتائج
-    </button>
-  </nav>
 
-  <!-- Main Content -->
-  <main class="main">
-    <!-- ===== CHAPTERS VIEW ===== -->
-    <div class="view active" id="view-chapters">
-      <div class="page-header">
-        <h1>البورد الأردني - التخدير</h1>
-        <p>الجزء الأول - 600 سؤال اختيار من متعدد</p>
-      </div>
+<!-- Desktop Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="8" fill="rgba(56,189,176,0.15)"/>
+      <path d="M8 14h12M14 8v12" stroke="#38bdb0" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>\u0645\u0631\u0627\u062c\u0639\u0629 \u0627\u0644\u062a\u062e\u062f\u064a\u0631</span>
+  </div>
+  <button class="sidebar-item" id="sidebar-home" onclick="navigateTo('home')">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 6.5L8 2l6 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z" stroke="currentColor" stroke-width="1.5"/></svg>
+    \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629
+  </button>
+  <button class="sidebar-item" id="sidebar-search" onclick="navigateTo('search')">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M13 13l-2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    \u0627\u0644\u0628\u062d\u062b
+  </button>
+  <button class="sidebar-item" id="sidebar-bookmarks" onclick="navigateTo('bookmarks')">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2h8a1 1 0 011 1v11l-5-3-5 3V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/></svg>
+    \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0627\u062a
+  </button>
+  <button class="sidebar-item" id="sidebar-score" onclick="navigateTo('score')">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12h2v2H2zM6 8h2v6H6zM10 5h2v9h-2zM14 2h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    \u0627\u0644\u0646\u062a\u0627\u0626\u062c
+  </button>
+</aside>
 
-      <button class="all-questions-btn" onclick="startQuiz('all')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        جميع الأسئلة (600)
-      </button>
+<!-- Mobile Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-item" id="nav-home" onclick="navigateTo('home')">
+    <svg viewBox="0 0 22 22" fill="none"><path d="M3 9L11 3l8 6v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9z" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span>\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629</span>
+  </button>
+  <button class="nav-item" id="nav-search" onclick="navigateTo('search')">
+    <svg viewBox="0 0 22 22" fill="none"><circle cx="10" cy="10" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M18 18l-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span>\u0627\u0644\u0628\u062d\u062b</span>
+  </button>
+  <button class="nav-item" id="nav-bookmarks" onclick="navigateTo('bookmarks')">
+    <svg viewBox="0 0 22 22" fill="none"><path d="M5 3h12a1 1 0 011 1v15l-7-4-7 4V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span>\u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0627\u062a</span>
+  </button>
+  <button class="nav-item" id="nav-score" onclick="navigateTo('score')">
+    <svg viewBox="0 0 22 22" fill="none"><rect x="3" y="12" width="4" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="8" width="4" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="4" width="4" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span>\u0627\u0644\u0646\u062a\u0627\u0626\u062c</span>
+  </button>
+</nav>
 
-      <div class="chapter-grid" id="chapter-grid"></div>
+<!-- Main Content -->
+<main class="main">
 
-      <footer class="app-footer">
-        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
-      </footer>
-    </div>
-
-    <!-- ===== QUIZ VIEW ===== -->
-    <div class="view" id="view-quiz">
-      <button class="back-btn" onclick="navigateTo('chapters')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        العودة للفصول
-      </button>
-
-      <div class="quiz-header">
-        <div class="quiz-top-bar">
-          <span class="quiz-chapter-label" id="quiz-chapter-label"></span>
-          <span class="quiz-score-badge" id="quiz-score-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            <span id="running-score">0%</span>
-          </span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
-        <div class="progress-label" id="quiz-progress-label"></div>
-      </div>
-
-      <button class="grid-toggle-btn" id="grid-toggle" onclick="toggleGrid()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        خريطة الأسئلة
-      </button>
-      <div class="question-grid" id="question-grid"></div>
-
-      <div id="question-container"></div>
-
-      <div class="quiz-nav">
-        <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          السابق
-        </button>
-        <span class="nav-counter" id="nav-counter"></span>
-        <button class="nav-btn" id="next-btn" onclick="nextQuestion()">
-          التالي
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- ===== SEARCH VIEW ===== -->
-    <div class="view" id="view-search">
-      <div class="page-header">
-        <h1>البحث</h1>
-        <p>ابحث في جميع الأسئلة بكلمة مفتاحية</p>
-      </div>
-      <div class="search-container">
-        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="search-input" id="search-input" placeholder="Search questions (e.g., sevoflurane, intubation, epidural)..." oninput="handleSearch()">
-      </div>
-      <div class="search-results-count" id="search-results-count"></div>
-      <div id="search-results"></div>
-    </div>
-
-    <!-- ===== BOOKMARKS VIEW ===== -->
-    <div class="view" id="view-bookmarks">
-      <div class="page-header">
-        <h1>المحفوظات</h1>
-        <p>الأسئلة المحفوظة للمراجعة لاحقاً</p>
-      </div>
-      <div id="bookmarks-container"></div>
-    </div>
-
-    <!-- ===== SCORE VIEW ===== -->
-    <div class="view" id="view-score">
-      <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <div>
-          <h1>النتائج</h1>
-          <p>ملخص أدائك في الجلسة الحالية</p>
-        </div>
-        <button class="reset-btn" onclick="resetAllScores()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg>
-          إعادة تعيين
-        </button>
-      </div>
-      <div class="score-overview" id="score-overview"></div>
-      <div class="score-chapter-list" id="score-chapter-list"></div>
-    </div>
-  </main>
-
-  <!-- Bottom Nav (Mobile) -->
-  <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-item active" onclick="navigateTo('chapters')" data-nav="chapters">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      الفصول
-    </button>
-    <button class="nav-item" onclick="navigateTo('search')" data-nav="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      البحث
-    </button>
-    <button class="nav-item" onclick="navigateTo('bookmarks')" data-nav="bookmarks">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-      المحفوظات
-    </button>
-    <button class="nav-item" onclick="navigateTo('score')" data-nav="score">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      النتائج
-    </button>
-  </nav>
+<!-- HOME VIEW -->
+<div id="view-home" class="view">
+  <div class="page-header">
+    <h1>\u0645\u0631\u0627\u062c\u0639\u0629 \u0627\u0644\u0628\u0648\u0631\u062f \u0627\u0644\u0623\u0631\u062f\u0646\u064a</h1>
+    <p>\u0627\u0644\u062a\u062e\u062f\u064a\u0631 \u2014 \u0627\u0644\u0623\u062c\u0632\u0627\u0621 \u0627\u0644\u0623\u0648\u0644 \u0648\u0627\u0644\u062b\u0627\u0646\u064a \u0648\u0627\u0644\u062b\u0627\u0644\u062b</p>
+  </div>
+  <button class="all-questions-btn" onclick="startQuiz('all')">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v14M2 9h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    \u062c\u0645\u064a\u0639 \u0627\u0644\u0623\u0633\u0626\u0644\u0629
+  </button>
+  <div class="chapter-grid" id="chapter-grid"></div>
 </div>
 
-<script src="data_part1a.js"></script>
-<script src="data_part1b.js"></script>
-<script src="data_part1c.js"></script>
-<script src="data_part1d.js"></script>
-<script src="data_part1e.js"></script>
-<script src="data_part1f.js"></script>
-<script src="data_part2a.js"></script>
-<script src="data_part2b.js"></script>
-<script src="data_part2c.js"></script>
-<script src="data_part2d.js"></script>
-<script src="data_part2e.js"></script>
-<script src="data_part2f.js"></script>
-<script src="data_part3a.js"></script>
-<script src="data_part3b.js"></script>
-<script src="data_part3c.js"></script>
-<script src="data_part3d.js"></script>
-<script src="data_part3e.js"></script>
-<script src="data_part3f.js"></script>
+<!-- QUIZ VIEW -->
+<div id="view-quiz" class="view">
+  <button class="back-btn" onclick="navigateTo('home')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    \u0631\u062c\u0648\u0639
+  </button>
+
+  <div class="quiz-header" id="quiz-header">
+    <div class="quiz-top-bar">
+      <span class="quiz-chapter-label" id="quiz-chapter-label"></span>
+      <div class="quiz-score-badge">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.4 2.8L11 4.3l-2.5 2.4.6 3.4L6 8.5 2.9 10.1l.6-3.4L1 4.3l3.6-.5z" fill="currentColor"/></svg>
+        <span id="quiz-score-display">0/0</span>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="quiz-progress"></div>
+    </div>
+    <div class="progress-label" id="quiz-progress-label">Question 1 of N</div>
+  </div>
+
+  <button class="grid-toggle-btn" id="grid-toggle-btn" onclick="toggleGrid()">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="7" y="1" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="7" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="7" y="7" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    \u062e\u0631\u064a\u0637\u0629 \u0627\u0644\u0623\u0633\u0626\u0644\u0629
+  </button>
+  <div class="question-grid" id="question-grid"></div>
+
+  <div id="quiz-content"></div>
+
+  <div class="quiz-nav" id="quiz-nav">
+    <button class="nav-btn" id="prev-btn" onclick="navigateQuestion(-1)" disabled>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      \u0627\u0644\u0633\u0627\u0628\u0642
+    </button>
+    <span class="nav-counter" id="nav-counter">1/N</span>
+    <button class="nav-btn" id="next-btn" onclick="navigateQuestion(1)">
+      \u0627\u0644\u062a\u0627\u0644\u064a
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SEARCH VIEW -->
+<div id="view-search" class="view">
+  <div class="page-header">
+    <h1>\u0627\u0644\u0628\u062d\u062b</h1>
+    <p>\u0627\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0648\u0627\u0644\u0634\u0631\u0648\u062d\u0627\u062a</p>
+  </div>
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M13 13l-2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" id="search-input" placeholder="Search questions..." oninput="handleSearch(this.value)">
+  </div>
+  <div id="search-results-count" class="search-results-count"></div>
+  <div id="search-results"></div>
+</div>
+
+<!-- BOOKMARKS VIEW -->
+<div id="view-bookmarks" class="view">
+  <div class="page-header">
+    <h1>\u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0627\u062a</h1>
+    <p>\u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0627\u0644\u062a\u064a \u062d\u0641\u0638\u062a\u0647\u0627</p>
+  </div>
+  <div id="bookmarks-list"></div>
+</div>
+
+<!-- SCORE VIEW -->
+<div id="view-score" class="view">
+  <div class="page-header">
+    <h1>\u0627\u0644\u0646\u062a\u0627\u0626\u062c</h1>
+    <p>\u062a\u062a\u0628\u0639 \u0623\u062f\u0627\u0626\u0643 \u0648\u062a\u0642\u062f\u0645\u0643</p>
+  </div>
+  <div class="score-overview">
+    <div class="score-stat">
+      <div class="score-stat-value green" id="stat-correct">0</div>
+      <div class="score-stat-label">Correct</div>
+    </div>
+    <div class="score-stat">
+      <div class="score-stat-value red" id="stat-wrong">0</div>
+      <div class="score-stat-label">Wrong</div>
+    </div>
+    <div class="score-stat">
+      <div class="score-stat-value teal" id="stat-accuracy">0%</div>
+      <div class="score-stat-label">Accuracy</div>
+    </div>
+  </div>
+  <div class="score-chapter-list" id="score-chapter-list"></div>
+</div>
+
+</main>
+
+<footer class="app-footer">
+  Made with <a href="https://www.perplexity.ai/computer" target="_blank">Perplexity Computer</a>
+</footer>
+
+</div>
+
+<script src="dp1_01.js"></script>
+<script src="dp1_02.js"></script>
+<script src="dp1_03.js"></script>
+<script src="dp1_04.js"></script>
+<script src="dp1_05.js"></script>
+<script src="dp1_06.js"></script>
+<script src="dp1_07.js"></script>
+<script src="dp1_08.js"></script>
+<script src="dp1_09.js"></script>
+<script src="dp1_10.js"></script>
+<script src="dp1_11.js"></script>
+<script src="dp1_12.js"></script>
+<script src="dp1_13.js"></script>
+<script src="dp1_14.js"></script>
+<script src="dp1_15.js"></script>
+<script src="dp2_01.js"></script>
+<script src="dp2_02.js"></script>
+<script src="dp2_03.js"></script>
+<script src="dp2_04.js"></script>
+<script src="dp2_05.js"></script>
+<script src="dp2_06.js"></script>
+<script src="dp2_07.js"></script>
+<script src="dp2_08.js"></script>
+<script src="dp2_09.js"></script>
+<script src="dp2_10.js"></script>
+<script src="dp2_11.js"></script>
+<script src="dp2_12.js"></script>
+<script src="dp2_13.js"></script>
+<script src="dp2_14.js"></script>
+<script src="dp2_15.js"></script>
+<script src="dp3_01.js"></script>
+<script src="dp3_02.js"></script>
+<script src="dp3_03.js"></script>
+<script src="dp3_04.js"></script>
+<script src="dp3_05.js"></script>
+<script src="dp3_06.js"></script>
+<script src="dp3_07.js"></script>
+<script src="dp3_08.js"></script>
+<script src="dp3_09.js"></script>
+<script src="dp3_10.js"></script>
+<script src="dp3_11.js"></script>
+<script src="dp3_12.js"></script>
+<script src="dp3_13.js"></script>
+<script src="dp3_14.js"></script>
+<script src="dp3_15.js"></script>
 <script src="data_part4.js"></script>
 <script src="data.js"></script>
 <script>
-// ===== APP STATE =====
-const state = {
-  currentView: 'chapters',
-  currentChapter: null,       // null = all, or chapter string
+// ============================================================
+// STATE
+// ============================================================
+const STATE = {
+  currentView: 'home',
   quizQuestions: [],
   currentIndex: 0,
-  answers: {},                // { globalIndex: { selected, correct } }
+  answers: {},      // qId -> chosen key
   bookmarks: new Set(),
+  score: {},        // qId -> {correct: bool}
   gridOpen: false,
+  allAnswers: {},   // persistent across sessions: qId -> chosen key
+  allScore: {},     // persistent: qId -> {correct: bool}
 };
 
-const CHAPTERS = [
-  { key: 'Chapter 1: Physics, Chemistry, and Mathematics', name: 'Physics, Chemistry, and Mathematics', num: 1 },
-  { key: 'Chapter 2: Anesthesia Equipment', name: 'Anesthesia Equipment', num: 2 },
-  { key: 'Chapter 3: Circulation', name: 'Circulation', num: 3 },
-  { key: 'Chapter 4: Respiration', name: 'Respiration', num: 4 },
-  { key: 'Chapter 5: Nervous System', name: 'Nervous System', num: 5 },
-  { key: 'Chapter 6: Renal, Hepatic, Endocrine, Hematologic, and Metabolic Systems', name: 'Renal, Hepatic, Endocrine, Hematologic, and Metabolic Systems', num: 6 },
-  { key: 'Chapter 7: Pharmacology', name: 'Pharmacology', num: 7 },
-  { key: 'Chapter 8: General Anesthesia', name: 'General Anesthesia', num: 8 },
-  { key: 'Chapter 9: Regional Anesthesia', name: 'Regional Anesthesia', num: 9 },
-];
-
-// Build a global index map: each question gets a unique index
-const allQuestions = QUESTIONS_DATA.map((q, i) => ({ ...q, globalIndex: i }));
-
-// Audio base URL - change to '' for local hosting with audio/ folder, or use CDN URL
-const AUDIO_BASE_URL = 'audio/';
-
-// Audio files available (question numbers that have teacher MP3)
-const AUDIO_QUESTIONS = new Set([1,2,3,4,5,6,7,8,9,10,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,479,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523]);
-
-function getChapterQuestions(chapterKey) {
-  return allQuestions.filter(q => q.chapter === chapterKey);
+// ============================================================
+// STORAGE
+// ============================================================
+function saveState() {
+  try {
+    localStorage.setItem('anesthesia_answers', JSON.stringify(Object.fromEntries(
+      Object.entries(STATE.allAnswers)
+    )));
+    localStorage.setItem('anesthesia_score', JSON.stringify(Object.fromEntries(
+      Object.entries(STATE.allScore)
+    )));
+    localStorage.setItem('anesthesia_bookmarks', JSON.stringify([...STATE.bookmarks]));
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const ans = localStorage.getItem('anesthesia_answers');
+    if (ans) STATE.allAnswers = JSON.parse(ans);
+    const sc = localStorage.getItem('anesthesia_score');
+    if (sc) STATE.allScore = JSON.parse(sc);
+    const bm = localStorage.getItem('anesthesia_bookmarks');
+    if (bm) STATE.bookmarks = new Set(JSON.parse(bm));
+  } catch(e) {}
 }
 
-function getChapterStats(chapterKey) {
-  const qs = chapterKey ? getChapterQuestions(chapterKey) : allQuestions;
-  let answered = 0, correct = 0;
-  qs.forEach(q => {
-    if (state.answers[q.globalIndex] !== undefined) {
-      answered++;
-      if (state.answers[q.globalIndex].correct) correct++;
+// ============================================================
+// CHAPTERS \u2014 Derived from QUESTIONS_DATA
+// ============================================================
+function buildChapters() {
+  const map = {};
+  QUESTIONS_DATA.forEach(q => {
+    if (!map[q.chapter_key]) {
+      map[q.chapter_key] = { key: q.chapter_key, name: q.chapter_name || q.chapter_key, num: q.chapter_num || 0, questions: [] };
     }
+    map[q.chapter_key].questions.push(q);
   });
-  return { total: qs.length, answered, correct, wrong: answered - correct };
+  return Object.values(map).sort((a,b) => a.num - b.num);
 }
 
-// ===== NAVIGATION =====
+let CHAPTERS = [];
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  CHAPTERS = buildChapters();
+  renderHomeView();
+  navigateTo('home');
+  handleHashNav();
+});
+
+// ============================================================
+// NAVIGATION
+// ============================================================
 function navigateTo(view) {
-  state.currentView = view;
+  STATE.currentView = view;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + view).classList.add('active');
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
 
-  // Update nav active states
-  document.querySelectorAll('.sidebar-item, .nav-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.nav === view);
-  });
+  // Update bottom nav
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + view);
+  if (navEl) navEl.classList.add('active');
 
-  if (view === 'chapters') renderChapters();
+  // Update sidebar
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  const sideEl = document.getElementById('sidebar-' + view);
+  if (sideEl) sideEl.classList.add('active');
+
   if (view === 'bookmarks') renderBookmarks();
   if (view === 'score') renderScore();
-  if (view === 'quiz' && state.quizQuestions.length === 0) {
-    // If no quiz started, redirect to chapters
-    navigateTo('chapters');
-    return;
+  if (view === 'search') {
+    const inp = document.getElementById('search-input');
+    if (inp) inp.focus();
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0,0);
 }
 
-// ===== CHAPTERS =====
-function renderChapters() {
+// ============================================================
+// HOME VIEW
+// ============================================================
+function renderHomeView() {
   const grid = document.getElementById('chapter-grid');
-  grid.innerHTML = CHAPTERS.map(ch => {
-    const stats = getChapterStats(ch.key);
-    const pct = stats.total > 0 ? Math.round((stats.answered / stats.total) * 100) : 0;
-    return `
-      <div class="chapter-card" onclick="startQuiz('${ch.key}')">
-        <div class="chapter-card-num">${ch.num}</div>
-        <div class="chapter-card-title">${ch.name}</div>
-        <div class="chapter-card-footer">
-          <span class="chapter-card-count">${stats.total} سؤال</span>
-          <div class="chapter-card-progress">
-            <div class="progress-bar-mini">
-              <div class="progress-bar-mini-fill" style="width:${pct}%"></div>
-            </div>
-            <span class="progress-text-mini">${stats.answered}/${stats.total}</span>
+  if (!grid) return;
+  CHAPTERS.forEach(ch => {
+    const total = ch.questions.length;
+    const answered = ch.questions.filter(q => STATE.allAnswers[q.id] !== undefined).length;
+    const correct = ch.questions.filter(q => STATE.allScore[q.id]?.correct).length;
+    const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.innerHTML = `
+      <div class="chapter-card-num">${ch.num}</div>
+      <div class="chapter-card-title">${ch.name}</div>
+      <div class="chapter-card-footer">
+        <span class="chapter-card-count">${total} questions</span>
+        <div class="chapter-card-progress">
+          <div class="progress-bar-mini">
+            <div class="progress-bar-mini-fill" style="width:${pct}%"></div>
           </div>
+          <span class="progress-text-mini">${pct}%</span>
         </div>
       </div>
     `;
-  }).join('');
-
-  // Update all-questions button with progress
-  const allStats = getChapterStats(null);
-  const allPct = allStats.total > 0 ? Math.round((allStats.answered / allStats.total) * 100) : 0;
-  document.querySelector('.all-questions-btn').innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    جميع الأسئلة (${allStats.total}) — ${allStats.answered} مُجاب (${allPct}%)
-  `;
+    card.onclick = () => startQuiz(ch.key);
+    grid.appendChild(card);
+  });
 }
 
-// ===== QUIZ =====
+// ============================================================
+// QUIZ
+// ============================================================
 function startQuiz(chapterKey) {
-  if (chapterKey === 'all') {
-    state.currentChapter = null;
-    state.quizQuestions = [...allQuestions];
-  } else {
-    state.currentChapter = chapterKey;
-    state.quizQuestions = getChapterQuestions(chapterKey);
-  }
-  state.currentIndex = 0;
-  state.gridOpen = false;
-  navigateTo('quiz');
-  renderQuiz();
-}
+  const questions = chapterKey === 'all'
+    ? [...QUESTIONS_DATA]
+    : QUESTIONS_DATA.filter(q => q.chapter_key === chapterKey);
 
-function renderQuiz() {
-  const qs = state.quizQuestions;
-  const idx = state.currentIndex;
-  const q = qs[idx];
-  if (!q) return;
+  if (!questions.length) return;
 
-  // Chapter label
-  const label = state.currentChapter
-    ? CHAPTERS.find(c => c.key === state.currentChapter)?.name || ''
-    : 'All Questions';
-  document.getElementById('quiz-chapter-label').textContent = label;
+  STATE.quizQuestions = questions;
+  STATE.currentIndex = 0;
+  STATE.answers = {};
+  STATE.score = {};
+  STATE.gridOpen = false;
 
-  // Score badge
-  const stats = state.currentChapter ? getChapterStats(state.currentChapter) : getChapterStats(null);
-  const scorePct = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
-  document.getElementById('running-score').textContent = stats.answered > 0 ? scorePct + '%' : '—';
-
-  // Progress
-  const progressPct = ((idx + 1) / qs.length) * 100;
-  document.getElementById('quiz-progress').style.width = progressPct + '%';
-  document.getElementById('quiz-progress-label').textContent = `Question ${idx + 1} of ${qs.length}`;
-
-  // Nav counter
-  document.getElementById('nav-counter').textContent = `${idx + 1} / ${qs.length}`;
-  document.getElementById('prev-btn').disabled = idx === 0;
-  document.getElementById('next-btn').disabled = idx === qs.length - 1;
-
-  // Show summary button if all questions answered OR on last question and answered
-  const allAnswered = checkEndOfChapter();
-  const isLastAndAnswered = idx === qs.length - 1 && state.answers[q.globalIndex] !== undefined;
-  let summaryBtnEl = document.getElementById('summary-btn-nav');
-  if (!summaryBtnEl) {
-    summaryBtnEl = document.createElement('button');
-    summaryBtnEl.id = 'summary-btn-nav';
-    summaryBtnEl.className = 'nav-btn';
-    summaryBtnEl.style.background = 'var(--accent)';
-    summaryBtnEl.style.color = 'var(--bg-primary)';
-    summaryBtnEl.style.borderColor = 'var(--accent)';
-    summaryBtnEl.textContent = '\u0639\u0631\u0636 \u0627\u0644\u0646\u062a\u0627\u0626\u062c';
-    summaryBtnEl.onclick = showEndSummary;
-    document.querySelector('.quiz-nav').appendChild(summaryBtnEl);
-  }
-  summaryBtnEl.style.display = (allAnswered || isLastAndAnswered) ? 'inline-flex' : 'none';
-
-  // Check if already answered
-  const existingAnswer = state.answers[q.globalIndex];
-
-  // Build question HTML
-  const choiceKeys = Object.keys(q.choices);
-  let choicesHtml = choiceKeys.map(key => {
-    let cls = 'choice-btn';
-    if (existingAnswer) {
-      cls += ' answered';
-      if (key === q.correct_answer) cls += ' correct';
-      else if (key === existingAnswer.selected) cls += ' incorrect';
-    }
-    return `
-      <button class="${cls}" onclick="selectAnswer('${key}')" data-choice="${key}">
-        <span class="choice-letter">${key}</span>
-        <span class="choice-text">${q.choices[key]}</span>
-      </button>
-    `;
-  }).join('');
-
-  // Bookmark
-  const isBookmarked = state.bookmarks.has(q.globalIndex);
-
-  // Arabic translation of the question itself
-  const questionAr = q.question_ar || '';
-
-  let html = `
-    <div class="question-card">
-      <div class="question-number">Question ${q.question_number} — ${q.chapter}</div>
-      <div class="question-text">${q.question}</div>
-      <button class="q-explain-btn" onclick="toggleQuestionExplain(this)" dir="rtl">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        اشرح السؤال بالعربية
-      </button>
-      <div class="q-explain-panel" style="display:none;" dir="rtl">
-        <div class="q-explain-content">${questionAr || 'لا تتوفر ترجمة لهذا السؤال حالياً'}</div>
-      </div>
-    </div>
-    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark(${q.globalIndex})">
-      <svg viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-      ${isBookmarked ? 'محفوظ' : 'حفظ'}
-    </button>
-    <div class="choices-list" id="choices-list">${choicesHtml}</div>
-  `;
-
-  // If answered, show explanation
-  if (existingAnswer) {
-    html += renderExplanation(q, existingAnswer);
-  }
-
-  document.getElementById('question-container').innerHTML = html;
-
-  // Render grid
-  renderQuestionGrid();
-}
-
-function selectAnswer(key) {
-  const q = state.quizQuestions[state.currentIndex];
-  if (state.answers[q.globalIndex] !== undefined) return;
-
-  const isCorrect = key === q.correct_answer;
-  state.answers[q.globalIndex] = { selected: key, correct: isCorrect };
-
-  // Play sound effect
-  playAnswerSound(isCorrect);
-
-  // Re-render to show result
-  renderQuiz();
-}
-
-// Parse explanation text into structured sections for colored display
-function parseExplanationSections(explanationAr, reviewNoteAr) {
-  const sections = { concept: '', trap: '', logic: '', memory: '' };
-  if (!explanationAr) return sections;
-
-  const text = explanationAr;
-  const sentences = text.split(/(?<=[.\u0964\u060C!\?]\s)/).filter(s => s.trim().length > 3);
-
-  // Heuristic: first ~40% is concept, look for trap keywords, rest is logic
-  const total = sentences.length;
-  const conceptEnd = Math.max(1, Math.ceil(total * 0.4));
-
-  const trapKeywords = /\u0641\u062e|\u062e\u0637\u0623|\u0627\u0646\u062a\u0628\u0647|\u062e\u0627\u0637\u0626|\u0644\u0627 \u064a\u0639\u0646\u064a|\u0644\u064a\u0633|\u0644\u0627 \u062a\u062e\u0644\u0637|\u062e\u0644\u0637|\u0627\u062d\u0630\u0631|trap|common mistake|not|incorrect|careful|confus/i;
-
-  let conceptParts = [];
-  let trapParts = [];
-  let logicParts = [];
-
-  sentences.forEach((s, i) => {
-    if (trapKeywords.test(s)) {
-      trapParts.push(s.trim());
-    } else if (i < conceptEnd) {
-      conceptParts.push(s.trim());
-    } else {
-      logicParts.push(s.trim());
+  // Pre-load from persistent state
+  questions.forEach(q => {
+    if (STATE.allAnswers[q.id] !== undefined) {
+      STATE.answers[q.id] = STATE.allAnswers[q.id];
+      STATE.score[q.id] = STATE.allScore[q.id];
     }
   });
 
-  // If no trap found, create a default trap from the wrong-answer context
-  if (trapParts.length === 0 && logicParts.length > 1) {
-    // Move last logic sentence as a general caution
-    trapParts.push(logicParts.pop());
-  }
+  const ch = CHAPTERS.find(c => c.key === chapterKey);
+  const label = ch ? ch.name : 'All Questions';
+  document.getElementById('quiz-chapter-label').textContent = label;
 
-  sections.concept = conceptParts.join(' ');
-  sections.trap = trapParts.join(' ');
-  sections.logic = logicParts.join(' ');
-  sections.memory = reviewNoteAr || '';
-
-  return sections;
+  navigateTo('quiz');
+  renderQuestion();
 }
 
-function renderExplanation(q, answer) {
-  const explanationAr = q.explanation_ar || '';
-  const explanationEn = q.explanation || '';
-  const wrongAnswersAr = q.wrong_answers_ar || {};
-  const reviewNoteAr = q.review_note_ar || '';
-  const isCorrect = answer.correct;
-  const selectedKey = answer.selected;
-  const correctKey = q.correct_answer;
-  const gi = q.globalIndex;
-  const qNum = q.question_number;
+function renderQuestion() {
+  const q = STATE.quizQuestions[STATE.currentIndex];
+  if (!q) return;
 
-  // === 1. RESULT BANNER ===
-  const bannerClass = isCorrect ? 'correct-banner' : 'wrong-banner';
-  let bannerHtml = '<div class="result-banner ' + bannerClass + '" dir="rtl">';
+  const total = STATE.quizQuestions.length;
+  const idx = STATE.currentIndex;
 
-  if (!isCorrect) {
-    bannerHtml += '<div class="result-line user-wrong">' +
-      '<span class="result-label">\u0625\u062c\u0627\u0628\u062a\u0643:</span>' +
-      '<span class="result-choice">(' + selectedKey + ') ' + q.choices[selectedKey] + '</span>' +
-      '<span class="result-icon">\u274C</span>' +
-      '<span style="color:var(--incorrect);font-weight:600;">\u062e\u0637\u0623</span>' +
-      '</div><div class="result-divider"></div>';
-  }
+  // Progress
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('quiz-progress').style.width = pct + '%';
+  document.getElementById('quiz-progress-label').textContent = `Question ${idx+1} of ${total}`;
+  document.getElementById('nav-counter').textContent = `${idx+1}/${total}`;
 
-  bannerHtml += '<div class="result-line correct-line">' +
-    '<span class="result-label">\u0627\u0644\u0625\u062c\u0627\u0628\u0629 \u0627\u0644\u0635\u062d\u064a\u062d\u0629:</span>' +
-    '<span class="result-choice">(' + correctKey + ') ' + q.choices[correctKey] + '</span>' +
-    '<span class="result-icon">\u2705</span>' +
-    (isCorrect ? '<span style="color:var(--correct);font-weight:600;">\u0635\u062d\u064a\u062d</span>' : '') +
-    '</div></div>';
+  // Score badge
+  const correct = Object.values(STATE.score).filter(s => s?.correct).length;
+  const answered = Object.keys(STATE.answers).length;
+  document.getElementById('quiz-score-display').textContent = `${correct}/${answered}`;
 
-  // === 2. TEACHER AUDIO PLAYER (always shown) ===
-  let audioPlayerHtml = '';
-  const hasMP3 = AUDIO_QUESTIONS.has(qNum);
-  if (hasMP3) {
-    audioPlayerHtml = '<div class="teacher-audio-card" dir="rtl">' +
-      '<div class="teacher-audio-header">' +
-        '<div class="teacher-icon">\uD83C\uDF93</div>' +
-        '<div><div class="teacher-label">\u0634\u0631\u062d \u0627\u0644\u0645\u0639\u0644\u0645 \u0627\u0644\u0635\u0648\u062a\u064a</div>' +
-        '<div class="teacher-sublabel">\u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0634\u0631\u062d \u0628\u0623\u0633\u0644\u0648\u0628 \u062a\u0639\u0644\u064a\u0645\u064a</div></div>' +
-      '</div>' +
-      '<audio class="teacher-audio-player" controls preload="metadata" src="' + AUDIO_BASE_URL + 'q' + qNum + '.mp3"></audio>' +
-    '</div>';
-  } else {
-    audioPlayerHtml = '<div class="teacher-audio-card" dir="rtl">' +
-      '<div class="teacher-audio-header">' +
-        '<div class="teacher-icon">\uD83D\uDD0A</div>' +
-        '<div><div class="teacher-label">\u0627\u0644\u0634\u0631\u062d \u0627\u0644\u0635\u0648\u062a\u064a</div></div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
-        '<button class="speak-btn" id="speak-full-btn-' + gi + '" onclick="speakFullExplanation(' + gi + ')" style="flex:1;min-width:120px;">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>' +
-          ' \u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0634\u0631\u062d' +
-        '</button>' +
-        (reviewNoteAr ? '<button class="speak-btn speak-btn-note" id="speak-note-btn-' + gi + '" onclick="speakReviewNote(' + gi + ')" style="flex:1;min-width:120px;">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>' +
-          ' \u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a' +
-        '</button>' : '') +
-      '</div>' +
-    '</div>';
-  }
+  // Nav buttons
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').textContent = idx === total-1 ? '\u0625\u0646\u0647\u0627\u0621' : '\u0627\u0644\u062a\u0627\u0644\u064a';
+  document.getElementById('next-btn').innerHTML = idx === total-1
+    ? '\u0625\u0646\u0647\u0627\u0621 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 8h8M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '\u0627\u0644\u062a\u0627\u0644\u064a <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  // === 3. TAB TOGGLE BUTTONS ===
-  var tabsHtml = '<div class="explanation-tabs" dir="rtl">' +
-    '<button class="exp-tab active" onclick="switchExpTab(this, \'' + gi + '\', \'teacher\')">' +
-      '\uD83C\uDF93 \u0634\u0631\u062d \u0643\u0645\u0639\u0644\u0645</button>' +
-    '<button class="exp-tab" onclick="switchExpTab(this, \'' + gi + '\', \'choices\')">' +
-      '\uD83D\uDCCB \u0634\u0631\u062d \u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a</button>' +
-    '<button class="exp-tab" onclick="switchExpTab(this, \'' + gi + '\', \'notes\')">' +
-      '\uD83D\uDCDD \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0644\u0645\u0631\u0627\u062c\u0639\u0629</button>' +
-  '</div>';
+  renderGrid();
 
-  // === 4. TAB: TEACHER EXPLANATION (شرح كمعلم) ===
-  var teacherHtml = '<div class="exp-panel" id="exp-teacher-' + gi + '" dir="rtl">';
+  // Render content
+  const content = document.getElementById('quiz-content');
+  content.innerHTML = '';
 
-  // Title
-  var teacherTitle = q.choices[correctKey] || '';
-  teacherHtml += '<div class="teacher-exp-title">\uD83C\uDF93 \u0634\u0631\u062d \u0643\u0645\u0639\u0644\u0645 \u2014 ' + teacherTitle + '</div>';
+  const answered_q = STATE.answers[q.id] !== undefined;
+  const userChoice = STATE.answers[q.id];
 
-  // Main explanation as narrative paragraphs
-  if (explanationAr) {
-    teacherHtml += '<div class="teacher-exp-body">' + explanationAr + '</div>';
-  }
+  // Question card
+  const qCard = document.createElement('div');
+  qCard.className = 'question-card';
+  qCard.innerHTML = `
+    <div class="question-number">Q ${idx+1}</div>
+    <div class="question-text">${q.question}</div>
+  `;
+  content.appendChild(qCard);
 
-  // English toggle
-  if (explanationEn) {
-    teacherHtml += '<details class="en-explanation-toggle" style="margin-top:12px;"><summary>\uD83C\uDDEC\uD83C\uDDE7 Show English Explanation</summary>' +
-      '<div class="en-text" dir="ltr" style="margin-top:8px;">' + explanationEn + '</div></details>';
-  }
-  teacherHtml += '</div>';
+  // Audio controls
+  const audioDiv = document.createElement('div');
+  audioDiv.className = 'audio-controls';
+  audioDiv.innerHTML = `
+    <button class="speak-btn" onclick="speakText('${escQ(q.question)}', this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h3l3-3v10L5 9H2V5z" stroke="currentColor" stroke-width="1.3"/><path d="M10 4.5c1 .8 1 3.2 0 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      \u0627\u0642\u0631\u0623 \u0627\u0644\u0633\u0624\u0627\u0644
+    </button>
+  `;
+  content.appendChild(audioDiv);
 
-  // === 5. TAB: CHOICES TABLE (شرح الخيارات) ===
-  var choiceKeys = Object.keys(q.choices);
-  var tableRows = choiceKeys.map(function(key) {
-    var isCorrectKey = key === correctKey;
-    var rowClass = isCorrectKey ? 'correct-row' : '';
-    var verdictHtml, reasonHtml;
-    if (isCorrectKey) {
-      verdictHtml = '<td class="col-verdict is-correct">\u2705 \u064a\u064f\u0642\u0627\u0633 \u2014<br>\u0635\u062d\u064a\u062d</td>';
-      reasonHtml = wrongAnswersAr[key] || '\u0647\u0630\u0627 \u0647\u0648 \u0627\u0644\u062e\u064a\u0627\u0631 \u0627\u0644\u0635\u062d\u064a\u062d';
-    } else {
-      verdictHtml = '<td class="col-verdict is-wrong">\u274C \u0644\u0627 \u064a\u064f\u0642\u0627\u0633 \u2014<br>\u0647\u0648 \u0627\u0644\u0627\u0633\u062a\u062b\u0646\u0627\u0621</td>';
-      reasonHtml = wrongAnswersAr[key] || '\u0625\u062c\u0627\u0628\u0629 \u062e\u0627\u0637\u0626\u0629';
+  // Choices
+  const choicesList = document.createElement('div');
+  choicesList.className = 'choices-list';
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (answered_q ? ' answered' : '');
+    if (answered_q) {
+      if (choice.key === q.correct) btn.classList.add('correct');
+      else if (choice.key === userChoice) btn.classList.add('incorrect');
     }
-    return '<tr class="' + rowClass + '">' +
-      '<td class="col-choice" dir="ltr"><strong>' + q.choices[key] + ' (' + key + ')</strong></td>' +
-      verdictHtml +
-      '<td class="col-reason">' + reasonHtml + '</td>' +
-    '</tr>';
-  }).join('');
+    btn.innerHTML = `<span class="choice-letter">${choice.key}</span><span class="choice-text">${choice.text}</span>`;
+    if (!answered_q) btn.onclick = () => answerQuestion(q, choice.key);
+    choicesList.appendChild(btn);
+  });
+  content.appendChild(choicesList);
 
-  var choicesHtml = '<div class="exp-panel" id="exp-choices-' + gi + '" style="display:none;">' +
-    '<div class="choices-explanation-card">' +
-      '<div class="section-header" dir="rtl">\uD83D\uDCCB \u0634\u0631\u062d \u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a</div>' +
-      '<table class="choices-table"><thead><tr>' +
-        '<th dir="rtl">\u0627\u0644\u062e\u064a\u0627\u0631</th>' +
-        '<th>\u0627\u0644\u062d\u0643\u0645</th>' +
-        '<th dir="rtl">\u0627\u0644\u0633\u0628\u0628</th>' +
-      '</tr></thead><tbody>' + tableRows + '</tbody></table>' +
-    '</div></div>';
-
-  // === 6. TAB: REVIEW NOTES (ملاحظات للمراجعة) ===
-  var notesContent = '';
-  if (reviewNoteAr) {
-    // Parse review note into structured content
-    var noteText = reviewNoteAr;
-    var formattedSections = '';
-
-    // Split into sentences for structured display
-    var noteSentences = noteText.split(/(?<=[\.\u060C!\?])\s+/).filter(function(s) { return s.trim().length > 3; });
-
-    // Group into positive (✅) and negative (❌) and general bullet points
-    var positives = [];
-    var negatives = [];
-    var general = [];
-    var keyTip = '';
-
-    noteSentences.forEach(function(s) {
-      var trimmed = s.trim();
-      if (/\u062a\u0630\u0643\u0631|\u0645\u0647\u0645|\u0627\u062d\u0641\u0638|remember|key|important/i.test(trimmed)) {
-        keyTip = trimmed;
-      } else if (/\u0644\u0627 \u064a|\u0644\u0627 \u062a|\u0644\u064a\u0633|\u0644\u0627 \u064a\u0645\u0643\u0646|not|cannot|never|except/i.test(trimmed)) {
-        negatives.push(trimmed);
-      } else if (/\u064a\u064f\u0642\u0627\u0633|\u064a\u0645\u0643\u0646|\u064a\u0633\u062a\u062e\u062f\u0645|can|measure|use/i.test(trimmed)) {
-        positives.push(trimmed);
-      } else {
-        general.push(trimmed);
-      }
-    });
-
-    // Build the review notes HTML
-    notesContent += '<div class="review-notes-pro" dir="rtl">';
-    notesContent += '<div class="review-notes-title">\uD83D\uDCDD \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0644\u0645\u0631\u0627\u062c\u0639\u0629 \u2014 ' + (q.choices[correctKey] || '').substring(0, 40) + '</div>';
-
-    if (positives.length > 0) {
-      notesContent += '<div class="review-group positive-group">\u2705 <strong>\u0646\u0642\u0627\u0637 \u0623\u0633\u0627\u0633\u064a\u0629:</strong><ul>';
-      positives.forEach(function(p) { notesContent += '<li>' + p + '</li>'; });
-      notesContent += '</ul></div>';
-    }
-
-    if (negatives.length > 0) {
-      notesContent += '<div class="review-group negative-group">\u274C <strong>\u0627\u0646\u062a\u0628\u0647 \u2014 \u0627\u0633\u062a\u062b\u0646\u0627\u0621\u0627\u062a:</strong><ul>';
-      negatives.forEach(function(n) { notesContent += '<li>' + n + '</li>'; });
-      notesContent += '</ul></div>';
-    }
-
-    if (general.length > 0) {
-      notesContent += '<ul class="review-general">';
-      general.forEach(function(g) { notesContent += '<li>' + g + '</li>'; });
-      notesContent += '</ul>';
-    }
-
-    if (keyTip) {
-      notesContent += '<div class="review-key-tip">\uD83D\uDD11 ' + keyTip + '</div>';
-    }
-
-    notesContent += '</div>';
-  } else {
-    notesContent = '<div class="review-notes-pro" dir="rtl" style="text-align:center;padding:24px;color:var(--text-muted);">\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0647\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644</div>';
+  if (answered_q) {
+    renderResultBanner(q, userChoice, content);
+    renderExplanation(q, content);
+    renderChoicesTable(q, content);
+    renderReviewNotes(q, content);
+    renderBookmarkBtn(q, content);
   }
-
-  var notesHtml = '<div class="exp-panel" id="exp-notes-' + gi + '" style="display:none;">' + notesContent + '</div>';
-
-  return bannerHtml + audioPlayerHtml + tabsHtml + teacherHtml + choicesHtml + notesHtml;
 }
 
-// ===== QUESTION GRID =====
-function toggleQuestionExplain(btn) {
-  var panel = btn.nextElementSibling;
-  if (!panel) return;
-  var isVisible = panel.style.display !== 'none';
-  panel.style.display = isVisible ? 'none' : 'block';
-  btn.classList.toggle('active', !isVisible);
+function escQ(str) {
+  return str.replace(/'/g, "\\'" ).replace(/"/g, '&quot;').replace(/\n/g,'\\n').substring(0,200);
 }
 
-function switchExpTab(btn, gi, tabName) {
-  // Toggle active class on buttons
-  var tabsContainer = btn.parentElement;
-  var allBtns = tabsContainer.querySelectorAll('.exp-tab');
-  for (var i = 0; i < allBtns.length; i++) {
-    allBtns[i].classList.remove('active');
+function answerQuestion(q, choiceKey) {
+  if (STATE.answers[q.id] !== undefined) return;
+  const isCorrect = choiceKey === q.correct;
+  STATE.answers[q.id] = choiceKey;
+  STATE.score[q.id] = { correct: isCorrect };
+  STATE.allAnswers[q.id] = choiceKey;
+  STATE.allScore[q.id] = { correct: isCorrect };
+  saveState();
+  renderQuestion();
+}
+
+function navigateQuestion(dir) {
+  const total = STATE.quizQuestions.length;
+  const newIdx = STATE.currentIndex + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= total) {
+    showSummary();
+    return;
   }
-  btn.classList.add('active');
-  // Show/hide panels
-  var panels = ['teacher', 'choices', 'notes'];
-  for (var j = 0; j < panels.length; j++) {
-    var panel = document.getElementById('exp-' + panels[j] + '-' + gi);
-    if (panel) {
-      panel.style.display = panels[j] === tabName ? 'block' : 'none';
-    }
-  }
+  STATE.currentIndex = newIdx;
+  renderQuestion();
+  window.scrollTo(0,0);
 }
 
 function toggleGrid() {
-  state.gridOpen = !state.gridOpen;
-  document.getElementById('question-grid').classList.toggle('open', state.gridOpen);
+  STATE.gridOpen = !STATE.gridOpen;
+  const gridEl = document.getElementById('question-grid');
+  if (gridEl) gridEl.classList.toggle('open', STATE.gridOpen);
+  document.getElementById('grid-toggle-btn').style.color = STATE.gridOpen ? 'var(--accent)' : '';
 }
 
-function renderQuestionGrid() {
+function renderGrid() {
   const grid = document.getElementById('question-grid');
-  grid.innerHTML = state.quizQuestions.map((q, i) => {
-    let cls = 'q-grid-item';
-    if (i === state.currentIndex) cls += ' current';
-    const ans = state.answers[q.globalIndex];
-    if (ans) cls += ans.correct ? ' answered-correct' : ' answered-wrong';
-    return `<button class="${cls}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
-  }).join('');
-}
-
-function jumpToQuestion(idx) {
-  stopSpeechOnNav();
-  state.currentIndex = idx;
-  state.gridOpen = false;
-  document.getElementById('question-grid').classList.remove('open');
-  renderQuiz();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function nextQuestion() {
-  stopSpeechOnNav();
-  if (state.currentIndex < state.quizQuestions.length - 1) {
-    state.currentIndex++;
-    renderQuiz();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-function prevQuestion() {
-  stopSpeechOnNav();
-  if (state.currentIndex > 0) {
-    state.currentIndex--;
-    renderQuiz();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-// ===== BOOKMARKS =====
-function toggleBookmark(globalIndex) {
-  if (state.bookmarks.has(globalIndex)) {
-    state.bookmarks.delete(globalIndex);
-  } else {
-    state.bookmarks.add(globalIndex);
-  }
-  if (state.currentView === 'quiz') renderQuiz();
-  if (state.currentView === 'bookmarks') renderBookmarks();
-}
-
-function renderBookmarks() {
-  const container = document.getElementById('bookmarks-container');
-  if (state.bookmarks.size === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-        <h3>لا توجد محفوظات</h3>
-        <p>احفظ الأسئلة أثناء المراجعة لتظهر هنا</p>
-      </div>
-    `;
-    return;
-  }
-
-  const bookmarkedQs = [...state.bookmarks].map(gi => allQuestions[gi]);
-  container.innerHTML = bookmarkedQs.map(q => `
-    <div class="search-result-item" onclick="jumpToBookmarked(${q.globalIndex})">
-      <div class="search-result-chapter">Q${q.question_number} — ${q.chapter}</div>
-      <div class="search-result-text">${q.question.substring(0, 120)}${q.question.length > 120 ? '...' : ''}</div>
-    </div>
-  `).join('');
-}
-
-function jumpToBookmarked(globalIndex) {
-  // Find which chapter this question belongs to
-  state.currentChapter = null;
-  state.quizQuestions = [...allQuestions];
-  state.currentIndex = globalIndex;
-  navigateTo('quiz');
-  renderQuiz();
-}
-
-// ===== SEARCH =====
-let searchTimeout;
-function handleSearch() {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(doSearch, 200);
-}
-
-function doSearch() {
-  const query = document.getElementById('search-input').value.trim().toLowerCase();
-  const resultsContainer = document.getElementById('search-results');
-  const countContainer = document.getElementById('search-results-count');
-
-  if (query.length < 2) {
-    resultsContainer.innerHTML = '';
-    countContainer.textContent = '';
-    return;
-  }
-
-  const results = allQuestions.filter(q =>
-    q.question.toLowerCase().includes(query) ||
-    Object.values(q.choices).some(c => c.toLowerCase().includes(query)) ||
-    (q.explanation && q.explanation.toLowerCase().includes(query))
-  ).slice(0, 50);
-
-  countContainer.textContent = `${results.length} نتيجة${results.length >= 50 ? ' (أول 50)' : ''}`;
-
-  resultsContainer.innerHTML = results.map(q => {
-    const highlighted = highlightText(q.question, query);
-    return `
-      <div class="search-result-item" onclick="jumpFromSearch(${q.globalIndex})">
-        <div class="search-result-chapter">Q${q.question_number} — ${q.chapter}</div>
-        <div class="search-result-text">${highlighted}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-function highlightText(text, query) {
-  const truncated = text.substring(0, 200);
-  const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-  return truncated.replace(regex, '<mark>$1</mark>') + (text.length > 200 ? '...' : '');
-}
-
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function jumpFromSearch(globalIndex) {
-  state.currentChapter = null;
-  state.quizQuestions = [...allQuestions];
-  state.currentIndex = globalIndex;
-  navigateTo('quiz');
-  renderQuiz();
-}
-
-// ===== SCORE =====
-function renderScore() {
-  const allStats = getChapterStats(null);
-  const pct = allStats.answered > 0 ? Math.round((allStats.correct / allStats.answered) * 100) : 0;
-
-  document.getElementById('score-overview').innerHTML = `
-    <div class="score-stat">
-      <div class="score-stat-value teal">${allStats.answered}</div>
-      <div class="score-stat-label">مُجاب</div>
-    </div>
-    <div class="score-stat">
-      <div class="score-stat-value green">${allStats.correct}</div>
-      <div class="score-stat-label">صحيح</div>
-    </div>
-    <div class="score-stat">
-      <div class="score-stat-value red">${allStats.wrong}</div>
-      <div class="score-stat-label">خطأ</div>
-    </div>
-  `;
-
-  document.getElementById('score-chapter-list').innerHTML = CHAPTERS.map(ch => {
-    const stats = getChapterStats(ch.key);
-    const chPct = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
-    const correctWidth = stats.total > 0 ? (stats.correct / stats.total) * 100 : 0;
-    const wrongWidth = stats.total > 0 ? (stats.wrong / stats.total) * 100 : 0;
-    return `
-      <div class="score-chapter-item">
-        <div class="score-chapter-name">Ch ${ch.num}: ${ch.name}</div>
-        <div class="score-chapter-bar">
-          <div class="score-bar-track">
-            <div class="score-bar-correct" style="width:${correctWidth}%"></div>
-            <div class="score-bar-wrong" style="width:${wrongWidth}%"></div>
-          </div>
-          <span class="score-chapter-pct">${stats.answered > 0 ? chPct + '%' : '—'}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function resetAllScores() {
-  state.answers = {};
-  state.bookmarks = new Set();
-  renderScore();
-}
-
-// ===== KEYBOARD SHORTCUTS =====
-document.addEventListener('keydown', e => {
-  if (state.currentView === 'quiz') {
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      nextQuestion();
-    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      prevQuestion();
-    } else if (['a','b','c','d','e','A','B','C','D','E'].includes(e.key)) {
-      selectAnswer(e.key.toUpperCase());
-    }
-  }
-  if (state.currentView === 'search' && e.key === '/') {
-    e.preventDefault();
-    document.getElementById('search-input').focus();
-  }
-});
-
-// ===== TOUCH SWIPE SUPPORT =====
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-}, { passive: true });
-
-document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  const diff = touchStartX - touchEndX;
-  if (state.currentView === 'quiz' && Math.abs(diff) > 60) {
-    if (diff > 0) nextQuestion();  // swipe left = next
-    else prevQuestion();           // swipe right = prev
-  }
-}, { passive: true });
-
-// ===== END OF CHAPTER DETECTION =====
-function checkEndOfChapter() {
-  if (!state.quizQuestions.length) return false;
-  const qs = state.quizQuestions;
-  const allAnswered = qs.every(q => state.answers[q.globalIndex] !== undefined);
-  return allAnswered;
-}
-
-// Override nextQuestion to check for end
-const _origNext = nextQuestion;
-
-function showEndSummary() {
-  const qs = state.quizQuestions;
-  let correct = 0, wrong = 0, unanswered = 0;
-  qs.forEach(q => {
-    const ans = state.answers[q.globalIndex];
-    if (!ans) unanswered++;
-    else if (ans.correct) correct++;
-    else wrong++;
+  if (!grid) return;
+  grid.innerHTML = '';
+  STATE.quizQuestions.forEach((q, i) => {
+    const item = document.createElement('button');
+    item.className = 'q-grid-item';
+    item.textContent = i+1;
+    if (i === STATE.currentIndex) item.classList.add('current');
+    else if (STATE.score[q.id]?.correct) item.classList.add('answered-correct');
+    else if (STATE.answers[q.id] !== undefined) item.classList.add('answered-wrong');
+    item.onclick = () => { STATE.currentIndex = i; renderQuestion(); window.scrollTo(0,0); };
+    grid.appendChild(item);
   });
-  const answered = correct + wrong;
-  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-  const wrongPct = answered > 0 ? Math.round((wrong / answered) * 100) : 0;
-  const label = state.currentChapter
-    ? CHAPTERS.find(c => c.key === state.currentChapter)?.name || 'Quiz'
-    : 'All Questions';
+  if (STATE.gridOpen) grid.classList.add('open');
+}
 
-  let grade = '';
-  let gradeColor = '';
-  if (pct >= 90) { grade = 'Excellent! 🎉'; gradeColor = 'var(--correct)'; }
-  else if (pct >= 75) { grade = 'Good Job! 👍'; gradeColor = 'var(--accent)'; }
-  else if (pct >= 60) { grade = 'Keep Going! 📚'; gradeColor = 'var(--warning)'; }
-  else { grade = 'Needs Review 🔄'; gradeColor = 'var(--incorrect)'; }
+// ============================================================
+// RESULT BANNER
+// ============================================================
+function renderResultBanner(q, userChoice, container) {
+  const isCorrect = userChoice === q.correct;
+  const banner = document.createElement('div');
+  banner.className = 'result-banner ' + (isCorrect ? 'correct-banner' : 'wrong-banner');
 
-  document.getElementById('question-container').innerHTML = `
-    <div class="summary-card">
-      <h2 style="color:${gradeColor}">${grade}</h2>
-      <p style="direction:ltr;text-align:center">${label}</p>
-      <div class="summary-score-ring" style="--pct:${pct};--wrong-pct:${wrongPct}">
-        <span class="summary-score-inner">${pct}%</span>
+  const correctChoice = q.choices.find(c => c.key === q.correct);
+  const userChoiceObj = q.choices.find(c => c.key === userChoice);
+
+  if (isCorrect) {
+    banner.innerHTML = `
+      <div class="result-line correct-line">
+        <span class="result-icon">\u2713</span>
+        <span class="result-label">Correct!</span>
+        <span class="result-choice">${userChoice}: ${userChoiceObj?.text || ''}</span>
+      </div>
+    `;
+  } else {
+    banner.innerHTML = `
+      <div class="result-line user-wrong">
+        <span class="result-icon">\u2717</span>
+        <span class="result-label">Your Answer:</span>
+        <span class="result-choice">${userChoice}: ${userChoiceObj?.text || ''}</span>
+      </div>
+      <div class="result-divider"></div>
+      <div class="result-line correct-line">
+        <span class="result-icon">\u2713</span>
+        <span class="result-label">Correct Answer:</span>
+        <span class="result-choice">${q.correct}: ${correctChoice?.text || ''}</span>
+      </div>
+    `;
+  }
+  container.appendChild(banner);
+}
+
+// ============================================================
+// EXPLANATION
+// ============================================================
+function renderExplanation(q, container) {
+  if (!q.explanation_ar) return;
+  const card = document.createElement('div');
+  card.className = 'question-explanation-card';
+  let html = '';
+
+  if (q.explanation_ar.concept) {
+    html += `
+      <div class="explanation-section concept-section">
+        <div class="section-title-row">
+          <span class="section-icon">\ud83d\udca1</span>
+          <span class="section-label">\u0627\u0644\u0645\u0641\u0647\u0648\u0645 \u0627\u0644\u0623\u0633\u0627\u0633\u064a</span>
+        </div>
+        <div class="section-body">${q.explanation_ar.concept}</div>
+      </div>
+    `;
+  }
+  if (q.explanation_ar.trap) {
+    html += `
+      <div class="explanation-section trap-section">
+        <div class="section-title-row">
+          <span class="section-icon">\u26a0\ufe0f</span>
+          <span class="section-label">\u0627\u0644\u0641\u062e \u0627\u0644\u0634\u0627\u0626\u0639</span>
+        </div>
+        <div class="section-body">${q.explanation_ar.trap}</div>
+      </div>
+    `;
+  }
+  if (q.explanation_ar.logic) {
+    html += `
+      <div class="explanation-section logic-section">
+        <div class="section-title-row">
+          <span class="section-icon">\ud83c\udfaf</span>
+          <span class="section-label">\u0645\u0646\u0637\u0642 \u0627\u0644\u0625\u062c\u0627\u0628\u0629</span>
+        </div>
+        <div class="section-body">${q.explanation_ar.logic}</div>
+      </div>
+    `;
+  }
+  if (q.explanation_ar.memory) {
+    html += `
+      <div class="explanation-section memory-section">
+        <div class="section-title-row">
+          <span class="section-icon">\ud83e\udde0</span>
+          <span class="section-label">\u0637\u0631\u064a\u0642\u0629 \u062a\u0630\u0643\u0631</span>
+        </div>
+        <div class="section-body">${q.explanation_ar.memory}</div>
+      </div>
+    `;
+  }
+
+  card.innerHTML = html;
+  container.appendChild(card);
+
+  // Audio for explanation
+  const expText = [q.explanation_ar.concept, q.explanation_ar.logic, q.explanation_ar.memory]
+    .filter(Boolean).join(' ');
+  if (expText) {
+    const audioDiv = document.createElement('div');
+    audioDiv.className = 'audio-controls';
+    audioDiv.innerHTML = `
+      <button class="speak-btn" onclick="speakText('${escQ(expText)}', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h3l3-3v10L5 9H2V5z" stroke="currentColor" stroke-width="1.3"/><path d="M10 4.5c1 .8 1 3.2 0 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        \u0627\u0642\u0631\u0623 \u0627\u0644\u0634\u0631\u062d
+      </button>
+    `;
+    container.appendChild(audioDiv);
+  }
+}
+
+// ============================================================
+// CHOICES TABLE
+// ============================================================
+function renderChoicesTable(q, container) {
+  if (!q.wrong_answers_ar || !q.wrong_answers_ar.length) return;
+  const card = document.createElement('div');
+  card.className = 'choices-explanation-card';
+  let html = `<div class="section-header">\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a</div>`;
+  html += `<table class="choices-table"><thead><tr><th>\u0627\u0644\u062e\u064a\u0627\u0631</th><th>\u0627\u0644\u062d\u0643\u0645</th><th>\u0627\u0644\u0633\u0628\u0628</th></tr></thead><tbody>`;
+
+  // Build a map from wrong_answers_ar
+  const wrongMap = {};
+  if (Array.isArray(q.wrong_answers_ar)) {
+    q.wrong_answers_ar.forEach(w => { wrongMap[w.key] = w.reason; });
+  }
+
+  q.choices.forEach(ch => {
+    const isCorrect = ch.key === q.correct;
+    const reason = isCorrect
+      ? (q.explanation_ar?.logic || q.explanation_ar?.concept || '')
+      : (wrongMap[ch.key] || '');
+    html += `<tr class="${isCorrect ? 'correct-row' : ''}">
+      <td class="col-choice">${ch.key}: ${ch.text}</td>
+      <td class="col-verdict ${isCorrect ? 'is-correct' : 'is-wrong'}">${isCorrect ? '\u2713 \u0635\u062d' : '\u2717 \u062e\u0637\u0623'}</td>
+      <td class="col-reason">${reason}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  card.innerHTML = html;
+  container.appendChild(card);
+}
+
+// ============================================================
+// REVIEW NOTES
+// ============================================================
+function renderReviewNotes(q, container) {
+  if (!q.review_note_ar) return;
+  const div = document.createElement('div');
+  div.className = 'review-notes';
+
+  // Parse review note
+  let bodyHtml = '';
+  if (Array.isArray(q.review_note_ar)) {
+    bodyHtml = '<ul>' + q.review_note_ar.map(n => `<li>${n}</li>`).join('') + '</ul>';
+  } else {
+    bodyHtml = `<p>${q.review_note_ar}</p>`;
+  }
+
+  div.innerHTML = `
+    <div class="review-title">
+      <span>\ud83d\udccb</span> \u0646\u0642\u0627\u0637 \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629 \u0627\u0644\u0633\u0631\u064a\u0639\u0629
+    </div>
+    <div class="review-body">${bodyHtml}</div>
+  `;
+  container.appendChild(div);
+
+  if (q.review_note_ar) {
+    const noteText = Array.isArray(q.review_note_ar) ? q.review_note_ar.join(' ') : q.review_note_ar;
+    const audioDiv = document.createElement('div');
+    audioDiv.className = 'audio-controls';
+    audioDiv.innerHTML = `
+      <button class="speak-btn speak-btn-note" onclick="speakText('${escQ(noteText)}', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h3l3-3v10L5 9H2V5z" stroke="currentColor" stroke-width="1.3"/><path d="M10 4.5c1 .8 1 3.2 0 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        \u0627\u0642\u0631\u0623 \u0627\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a
+      </button>
+    `;
+    container.appendChild(audioDiv);
+  }
+}
+
+// ============================================================
+// BOOKMARK
+// ============================================================
+function renderBookmarkBtn(q, container) {
+  const btn = document.createElement('button');
+  const isBookmarked = STATE.bookmarks.has(q.id);
+  btn.className = 'bookmark-btn' + (isBookmarked ? ' bookmarked' : '');
+  btn.innerHTML = `
+    <svg viewBox="0 0 14 14" fill="${isBookmarked ? 'currentColor' : 'none'}"><path d="M3 2h8a1 1 0 011 1v9l-5-3-5 3V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/></svg>
+    ${isBookmarked ? '\u062a\u0645 \u0627\u0644\u062d\u0641\u0638' : '\u062d\u0641\u0638 \u0627\u0644\u0633\u0624\u0627\u0644'}
+  `;
+  btn.onclick = () => {
+    if (STATE.bookmarks.has(q.id)) STATE.bookmarks.delete(q.id);
+    else STATE.bookmarks.add(q.id);
+    saveState();
+    renderQuestion();
+  };
+  container.appendChild(btn);
+}
+
+// ============================================================
+// BOOKMARKS VIEW
+// ============================================================
+function renderBookmarks() {
+  const list = document.getElementById('bookmarks-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  const bqs = QUESTIONS_DATA.filter(q => STATE.bookmarks.has(q.id));
+  if (!bqs.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M10 6h20a2 2 0 012 2v24l-12-7-12 7V8a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <h3>\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u062d\u0641\u0648\u0638\u0627\u062a</h3>
+        <p>\u0627\u062d\u0641\u0638 \u0627\u0644\u0623\u0633\u0626\u0644\u0629 \u0627\u0644\u0645\u0647\u0645\u0629 \u0644\u0645\u0631\u0627\u062c\u0639\u062a\u0647\u0627 \u0644\u0627\u062d\u0642\u0627\u064b</p>
+      </div>
+    `;
+    return;
+  }
+
+  bqs.forEach(q => {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+    const ch = CHAPTERS.find(c => c.key === q.chapter_key);
+    item.innerHTML = `
+      <div class="search-result-chapter">${ch?.name || q.chapter_key}</div>
+      <div class="search-result-text">${q.question}</div>
+    `;
+    item.onclick = () => {
+      const idx = QUESTIONS_DATA.indexOf(q);
+      startQuiz('all');
+      STATE.currentIndex = idx;
+      renderQuestion();
+    };
+    list.appendChild(item);
+  });
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function handleSearch(val) {
+  const container = document.getElementById('search-results');
+  const countEl = document.getElementById('search-results-count');
+  if (!container) return;
+  const query = val.trim().toLowerCase();
+  if (!query) {
+    container.innerHTML = '';
+    countEl.textContent = '';
+    return;
+  }
+
+  const results = QUESTIONS_DATA.filter(q =>
+    q.question.toLowerCase().includes(query) ||
+    q.choices.some(c => c.text.toLowerCase().includes(query))
+  );
+
+  countEl.textContent = `${results.length} result${results.length !== 1 ? 's' : ''}`;
+
+  container.innerHTML = '';
+  results.slice(0, 50).forEach(q => {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+    const ch = CHAPTERS.find(c => c.key === q.chapter_key);
+    const highlighted = q.question.replace(new RegExp(query, 'gi'), m => `<mark>${m}</mark>`);
+    item.innerHTML = `
+      <div class="search-result-chapter">${ch?.name || q.chapter_key}</div>
+      <div class="search-result-text">${highlighted}</div>
+    `;
+    item.onclick = () => {
+      startQuiz(q.chapter_key);
+      const chQ = CHAPTERS.find(c => c.key === q.chapter_key)?.questions || [];
+      const idx = chQ.indexOf(q);
+      STATE.currentIndex = idx;
+      renderQuestion();
+    };
+    container.appendChild(item);
+  });
+}
+
+// ============================================================
+// SCORE VIEW
+// ============================================================
+function renderScore() {
+  const totalCorrect = Object.values(STATE.allScore).filter(s => s?.correct).length;
+  const totalWrong = Object.values(STATE.allScore).filter(s => !s?.correct).length;
+  const totalAnswered = totalCorrect + totalWrong;
+  const accuracy = totalAnswered > 0 ? Math.round(totalCorrect / totalAnswered * 100) : 0;
+
+  document.getElementById('stat-correct').textContent = totalCorrect;
+  document.getElementById('stat-wrong').textContent = totalWrong;
+  document.getElementById('stat-accuracy').textContent = accuracy + '%';
+
+  const list = document.getElementById('score-chapter-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  CHAPTERS.forEach(ch => {
+    const total = ch.questions.length;
+    const correct = ch.questions.filter(q => STATE.allScore[q.id]?.correct).length;
+    const wrong = ch.questions.filter(q => STATE.allScore[q.id] && !STATE.allScore[q.id].correct).length;
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
+    const correctPct = total > 0 ? (correct / total * 100) : 0;
+    const wrongPct = total > 0 ? (wrong / total * 100) : 0;
+
+    const item = document.createElement('div');
+    item.className = 'score-chapter-item';
+    item.innerHTML = `
+      <div class="score-chapter-name">${ch.name}</div>
+      <div class="score-chapter-bar">
+        <div class="score-bar-track">
+          <div class="score-bar-correct" style="width:${correctPct}%"></div>
+          <div class="score-bar-wrong" style="width:${wrongPct}%"></div>
+        </div>
+        <span class="score-chapter-pct">${answered > 0 ? pct + '%' : '-'}</span>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ============================================================
+// SUMMARY
+// ============================================================
+function showSummary() {
+  const qs = STATE.quizQuestions;
+  const total = qs.length;
+  const correct = qs.filter(q => STATE.score[q.id]?.correct).length;
+  const wrong = qs.filter(q => STATE.score[q.id] && !STATE.score[q.id].correct).length;
+  const unanswered = total - correct - wrong;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const wrongPct = total > 0 ? Math.round(wrong / total * 100) : 0;
+
+  const content = document.getElementById('quiz-content');
+  content.innerHTML = `
+    <div class="summary-card" style="--pct:${pct}; --wrong-pct:${wrongPct}">
+      <h2>\u0627\u0646\u062a\u0647\u062a \u0627\u0644\u062c\u0644\u0633\u0629</h2>
+      <p>\u0623\u0643\u0645\u0644\u062a ${total} \u0633\u0624\u0627\u0644</p>
+      <div class="summary-score-ring">
+        <div class="summary-score-inner">
+          ${pct}%<span>${correct}/${total}</span>
+        </div>
       </div>
       <div class="summary-stats">
-        <div class="summary-stat-item">
-          <div class="summary-stat-num" style="color:var(--correct)">${correct}</div>
-          <div class="summary-stat-label">صحيح</div>
-        </div>
-        <div class="summary-stat-item">
-          <div class="summary-stat-num" style="color:var(--incorrect)">${wrong}</div>
-          <div class="summary-stat-label">خطأ</div>
-        </div>
-        <div class="summary-stat-item">
-          <div class="summary-stat-num" style="color:var(--text-secondary)">${unanswered}</div>
-          <div class="summary-stat-label">لم يُجب</div>
-        </div>
+        <div class="summary-stat-item"><span class="stat-val green">${correct}</span><span class="stat-lbl">Correct</span></div>
+        <div class="summary-stat-item"><span class="stat-val red">${wrong}</span><span class="stat-lbl">Wrong</span></div>
+        <div class="summary-stat-item"><span class="stat-val teal">${unanswered}</span><span class="stat-lbl">Skipped</span></div>
       </div>
       <div class="summary-actions">
-        <button class="summary-btn summary-btn-primary" onclick="navigateTo('chapters')">العودة للفصول</button>
-        <button class="summary-btn summary-btn-secondary" onclick="reviewWrong()">مراجعة الإجابات الخاطئة</button>
+        <button class="summary-action-btn primary" onclick="restartQuiz()">\u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629</button>
+        <button class="summary-action-btn secondary" onclick="navigateTo('home')">\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629</button>
       </div>
     </div>
   `;
+
+  document.getElementById('quiz-nav').style.display = 'none';
+  document.getElementById('grid-toggle-btn').style.display = 'none';
+  document.getElementById('question-grid').classList.remove('open');
+  document.getElementById('quiz-header').style.display = 'none';
 }
 
-function reviewWrong() {
-  const wrongQs = state.quizQuestions.filter(q => {
-    const ans = state.answers[q.globalIndex];
-    return ans && !ans.correct;
-  });
-  if (wrongQs.length === 0) {
-    alert('لا توجد إجابات خاطئة! 🎉');
-    return;
-  }
-  state.quizQuestions = wrongQs;
-  state.currentIndex = 0;
-  state.currentChapter = null;
-  renderQuiz();
+function restartQuiz() {
+  document.getElementById('quiz-nav').style.display = '';
+  document.getElementById('grid-toggle-btn').style.display = '';
+  document.getElementById('quiz-header').style.display = '';
+  const firstQ = STATE.quizQuestions[0];
+  const key = firstQ ? firstQ.chapter_key : 'all';
+  const isAll = STATE.quizQuestions.length === QUESTIONS_DATA.length;
+  startQuiz(isAll ? 'all' : key);
 }
 
-// ===== AUDIO SYSTEM =====
-
-// Web Audio API context (created on first interaction)
-let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-// Play correct/wrong sound effects
-function playAnswerSound(isCorrect) {
-  try {
-    const ctx = getAudioCtx();
-    if (ctx.state === 'suspended') ctx.resume();
-    
-    if (isCorrect) {
-      // Happy chime: two ascending tones
-      playTone(ctx, 523.25, 0.15, 0, 'sine', 0.3);  // C5
-      playTone(ctx, 659.25, 0.15, 0.12, 'sine', 0.3); // E5
-      playTone(ctx, 783.99, 0.25, 0.24, 'sine', 0.35); // G5
-    } else {
-      // Error buzz: low descending tone
-      playTone(ctx, 300, 0.15, 0, 'sawtooth', 0.15);
-      playTone(ctx, 200, 0.25, 0.12, 'sawtooth', 0.12);
-    }
-  } catch(e) { /* Audio not supported */ }
-}
-
-function playTone(ctx, freq, duration, delay, type, volume) {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(volume, ctx.currentTime + delay);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(ctx.currentTime + delay);
-  osc.stop(ctx.currentTime + delay + duration + 0.05);
-}
-
-// ===== TEXT-TO-SPEECH (Arabic) =====
+// ============================================================
+// TEXT TO SPEECH
+// ============================================================
 let currentUtterance = null;
-let isSpeaking = false;
+let speakingBtn = null;
 
-function speakArabic(text, buttonEl) {
-  // Stop if already speaking
-  if (isSpeaking) {
-    window.speechSynthesis.cancel();
-    isSpeaking = false;
-    if (buttonEl) updateSpeakButton(buttonEl, false);
-    return;
+function speakText(text, btn) {
+  if (typeof speechSynthesis === 'undefined') return;
+
+  if (currentUtterance && speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    if (speakingBtn) speakingBtn.classList.remove('speaking');
+    if (btn === speakingBtn) { speakingBtn = null; return; }
   }
-  
-  // Clean text for speech: remove HTML tags, emojis, special chars
-  let cleanText = text
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/[\u2705\u274C\u26A0\u2022\u25CF\u2192\u2190\u2191\u2193\u2194\u2195\u2714\u2716]/g, '')
-    .replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+/g, '')
-    .replace(/[\u2600-\u27FF]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  
-  if (!cleanText) return;
-  
-  // Use Web Speech API
-  const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.lang = 'ar';
-  utterance.rate = 0.9;
-  utterance.pitch = 1;
-  
-  // Find an Arabic voice if available
-  const voices = window.speechSynthesis.getVoices();
-  const arVoice = voices.find(v => v.lang.startsWith('ar'));
-  if (arVoice) utterance.voice = arVoice;
-  
-  utterance.onstart = () => {
-    isSpeaking = true;
-    if (buttonEl) updateSpeakButton(buttonEl, true);
-  };
-  utterance.onend = () => {
-    isSpeaking = false;
-    if (buttonEl) updateSpeakButton(buttonEl, false);
-  };
-  utterance.onerror = () => {
-    isSpeaking = false;
-    if (buttonEl) updateSpeakButton(buttonEl, false);
-  };
-  
-  window.speechSynthesis.cancel();
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
-}
 
-function updateSpeakButton(btn, playing) {
-  if (playing) {
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ar-SA';
+  utt.rate = 0.9;
+  const voices = speechSynthesis.getVoices();
+  const arabicVoice = voices.find(v => v.lang.startsWith('ar'));
+  if (arabicVoice) utt.voice = arabicVoice;
+
+  utt.onstart = () => {
+    currentUtterance = utt;
+    speakingBtn = btn;
     btn.classList.add('speaking');
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> إيقاف`;
-  } else {
+  };
+  utt.onend = utt.onerror = () => {
     btn.classList.remove('speaking');
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> استمع`;
-  }
+    speakingBtn = null;
+    currentUtterance = null;
+  };
+  speechSynthesis.speak(utt);
 }
 
-function speakFullExplanation(qIndex) {
-  const q = allQuestions[qIndex];
-  if (!q) return;
-  
-  const btn = document.getElementById('speak-full-btn-' + qIndex);
-  
-  // Build a comprehensive speech text
-  let speechParts = [];
-  
-  // Question explanation
-  if (q.explanation_ar) {
-    speechParts.push('شرح السؤال: ' + q.explanation_ar);
-  }
-  
-  // Correct answer
-  speechParts.push('الإجابة الصحيحة هي: ' + q.correct_answer + '. ' + q.choices[q.correct_answer]);
-  
-  // Wrong answers briefly
-  if (q.wrong_answers_ar) {
-    const wrongKeys = Object.keys(q.wrong_answers_ar).filter(k => k !== q.correct_answer);
-    if (wrongKeys.length > 0) {
-      speechParts.push('أما بقية الخيارات:');
-      wrongKeys.forEach(k => {
-        if (q.wrong_answers_ar[k]) {
-          speechParts.push(k + ': ' + q.wrong_answers_ar[k]);
-        }
-      });
-    }
-  }
-  
-  // Review note
-  if (q.review_note_ar) {
-    speechParts.push('ملاحظة للمراجعة: ' + q.review_note_ar);
-  }
-  
-  speakArabic(speechParts.join('. '), btn);
-}
-
-function speakReviewNote(qIndex) {
-  const q = allQuestions[qIndex];
-  if (!q || !q.review_note_ar) return;
-  const btn = document.getElementById('speak-note-btn-' + qIndex);
-  speakArabic(q.review_note_ar, btn);
-}
-
-// Stop speech when navigating
-const origNavigateTo = navigateTo;
-naviggateTo_wrapped = false;
-function stopSpeechOnNav() {
-  if (isSpeaking) {
-    window.speechSynthesis.cancel();
-    isSpeaking = false;
-  }
-  // Also stop any playing audio elements (teacher MP3s)
-  document.querySelectorAll('.teacher-audio-player').forEach(function(el) {
-    el.pause();
-    el.currentTime = 0;
-  });
-}
-
-// Preload voices
-if (window.speechSynthesis) {
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-
-// ===== INIT =====
-renderChapters();
-
-// Hash routing for direct links
-if (window.location.hash) {
-  const hash = window.location.hash.substring(1);
+// ============================================================
+// HASH NAV
+// ============================================================
+function handleHashNav() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
   if (hash.startsWith('quiz-ch')) {
     const chNum = parseInt(hash.replace('quiz-ch', ''));
     const ch = CHAPTERS.find(c => c.num === chNum);
