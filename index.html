@@ -24,9 +24,2585 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>/* FULL APP CSS AND HTML - see repo for complete file */</style>
+<style>
+/* ===== CSS RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0a0f1e;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1f2a42;
+  --bg-input: #0d1526;
+  --border: rgba(255,255,255,0.08);
+  --border-focus: rgba(56,189,176,0.5);
+  --text-primary: #e8edf5;
+  --text-secondary: #8b95a8;
+  --text-muted: #5a6478;
+  --accent: #38bdb0;
+  --accent-hover: #2ea89c;
+  --accent-glow: rgba(56,189,176,0.15);
+  --correct: #34d399;
+  --correct-bg: rgba(52,211,153,0.12);
+  --correct-border: rgba(52,211,153,0.3);
+  --incorrect: #f87171;
+  --incorrect-bg: rgba(248,113,113,0.12);
+  --incorrect-border: rgba(248,113,113,0.3);
+  --warning: #fbbf24;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.4);
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.8125rem; }
+.text-base { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.375rem; }
+.text-2xl { font-size: 1.75rem; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ===== APP LAYOUT ===== */
+.app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* Desktop sidebar */
+.sidebar {
+  display: none;
+  position: fixed;
+  top: 0; right: 0;
+  width: 240px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  padding: 24px 16px;
+  z-index: 100;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.sidebar-logo svg { flex-shrink: 0; }
+.sidebar-logo span { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: right;
+  font-family: var(--font);
+}
+.sidebar-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+.sidebar-item.active { background: var(--accent-glow); color: var(--accent); }
+.sidebar-item svg { flex-shrink: 0; }
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: 80px;
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Bottom nav (mobile) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--transition);
+  min-width: 56px;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item.active { color: var(--accent); }
+.nav-item svg { width: 22px; height: 22px; }
+
+/* ===== DESKTOP LAYOUT ===== */
+@media (min-width: 1024px) {
+  .sidebar { display: flex; }
+  .bottom-nav { display: none; }
+  .main { 
+    margin-right: 240px; 
+    margin-left: auto;
+    padding: 32px 40px; 
+    padding-bottom: 40px; 
+    max-width: 860px; 
+  }
+}
+
+/* ===== VIEW CONTAINERS ===== */
+.view { display: none; animation: fadeIn 200ms ease; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ===== HEADER ===== */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.page-header p {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* ===== CHAPTER CARDS ===== */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 520px) {
+  .chapter-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .chapter-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+
+.chapter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.chapter-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(56,189,176,0.25);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.chapter-card-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.chapter-card-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.4;
+  direction: ltr;
+  text-align: left;
+}
+.chapter-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chapter-card-count {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.chapter-card-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.progress-bar-mini {
+  width: 48px;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-mini-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 300ms ease;
+}
+.progress-text-mini {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* All Questions button */
+.all-questions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(56,189,176,0.12), rgba(56,189,176,0.05));
+  border: 1px solid rgba(56,189,176,0.2);
+  border-radius: var(--radius-lg);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font);
+  margin-bottom: 16px;
+}
+.all-questions-btn:hover {
+  background: linear-gradient(135deg, rgba(56,189,176,0.2), rgba(56,189,176,0.1));
+  border-color: rgba(56,189,176,0.4);
+}
+
+/* ===== QUIZ VIEW ===== */
+.quiz-header {
+  margin-bottom: 20px;
+}
+.quiz-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+.quiz-chapter-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  direction: ltr;
+  text-align: left;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.quiz-score-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.progress-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: left;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Question Card */
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.question-number {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  direction: ltr;
+  text-align: left;
+}
+.question-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  direction: ltr;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+/* Choices */
+.choices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.choice-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: var(--font);
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+  direction: ltr;
+  min-height: 48px;
+}
+.choice-btn:hover:not(.answered) {
+  background: var(--bg-card-hover);
+  border-color: rgba(255,255,255,0.15);
+}
+.choice-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.choice-text { flex: 1; padding-top: 2px; }
+
+.choice-btn.correct {
+  background: var(--correct-bg);
+  border-color: var(--correct-border);
+}
+.choice-btn.correct .choice-letter {
+  background: var(--correct);
+  color: var(--bg-primary);
+}
+.choice-btn.incorrect {
+  background: var(--incorrect-bg);
+  border-color: var(--incorrect-border);
+}
+.choice-btn.incorrect .choice-letter {
+  background: var(--incorrect);
+  color: var(--bg-primary);
+}
+.choice-btn.answered { cursor: default; pointer-events: none; }
+
+/* Bookmark button */
+.bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 16px;
+}
+.bookmark-btn:hover { border-color: var(--warning); color: var(--warning); }
+.bookmark-btn.bookmarked { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); color: var(--warning); }
+.bookmark-btn svg { width: 14px; height: 14px; }
+
+/* ===== RESULT BANNER ===== */
+.result-banner {
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.result-banner.correct-banner {
+  background: rgba(52,211,153,0.08);
+  border: 1px solid rgba(52,211,153,0.25);
+}
+.result-banner.wrong-banner {
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.25);
+}
+.result-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  flex-wrap: wrap;
+}
+.result-line .result-label {
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.result-line .result-choice {
+  font-weight: 500;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+.result-line .result-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.result-line.user-wrong .result-choice { color: var(--incorrect); }
+.result-line.user-wrong .result-label { color: var(--incorrect); }
+.result-line.correct-line .result-choice { color: var(--correct); }
+.result-line.correct-line .result-label { color: var(--correct); }
+.result-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 4px 0;
+}
+
+/* ===== QUESTION EXPLANATION SECTION (Enhanced) ===== */
+.question-explanation-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+  animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.explanation-section {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.explanation-section:last-child { border-bottom: none; }
+
+/* Key concept section */
+.explanation-section.concept-section {
+  border-right: 3px solid var(--accent);
+}
+.explanation-section.concept-section .section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(56,189,176,0.12);
+  color: var(--accent);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Trap/warning section */
+.explanation-section.trap-section {
+  background: rgba(248,113,113,0.05);
+  border-right: 3px solid var(--incorrect);
+}
+.explanation-section.trap-section .section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(248,113,113,0.12);
+  color: var(--incorrect);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Answer logic section */
+.explanation-section.logic-section {
+  border-right: 3px solid var(--correct);
+}
+.explanation-section.logic-section .section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(52,211,153,0.12);
+  color: var(--correct);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Memory tip section */
+.explanation-section.memory-section {
+  background: rgba(251,191,36,0.05);
+  border-right: 3px solid var(--warning);
+}
+.explanation-section.memory-section .section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(251,191,36,0.12);
+  color: var(--warning);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.section-title-row .section-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.section-body {
+  font-size: 0.875rem;
+  line-height: 2;
+  color: var(--text-secondary);
+  padding-right: 36px;
+}
+
+/* Audio player in explanation */
+.teacher-audio-card {
+  background: linear-gradient(135deg, rgba(56,189,176,0.08), rgba(56,189,176,0.03));
+  border: 1px solid rgba(56,189,176,0.2);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.teacher-audio-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.teacher-audio-header .teacher-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(56,189,176,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.teacher-audio-header .teacher-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.teacher-audio-header .teacher-sublabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.teacher-audio-player {
+  width: 100%;
+  height: 36px;
+  border-radius: 8px;
+  outline: none;
+}
+.teacher-audio-player::-webkit-media-controls-panel {
+  background: rgba(255,255,255,0.05);
+}
+.no-audio-fallback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+
+.en-explanation-toggle {
+  margin-top: 10px;
+}
+.en-explanation-toggle summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+.en-explanation-toggle .en-text {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  direction: ltr;
+  text-align: left;
+  line-height: 1.8;
+}
+
+/* ===== CHOICES TABLE (MediScore Style) ===== */
+.choices-explanation-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+  animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.choices-explanation-card .section-header {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 14px 18px 10px;
+  text-align: right;
+}
+.choices-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.choices-table th {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.choices-table th:first-child { text-align: right; }
+.choices-table th:nth-child(2) { text-align: center; width: 70px; }
+.choices-table th:last-child { text-align: right; }
+.choices-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.8;
+}
+.choices-table tr:last-child td { border-bottom: none; }
+.choices-table .col-choice {
+  font-weight: 600;
+  color: var(--text-primary);
+  direction: ltr;
+  text-align: left;
+  font-size: 0.8125rem;
+  min-width: 90px;
+}
+.choices-table .col-verdict {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.choices-table .col-verdict.is-correct {
+  color: var(--correct);
+}
+.choices-table .col-verdict.is-wrong {
+  color: var(--incorrect);
+}
+.choices-table .col-reason {
+  text-align: right;
+  direction: rtl;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.9;
+}
+.choices-table tr.correct-row {
+  background: rgba(52,211,153,0.05);
+}
+.choices-table tr.correct-row .col-choice { color: var(--correct); }
+.choices-table tr.correct-row .col-reason { color: var(--correct); }
+.choices-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Mobile: make table more readable on small screens */
+@media (max-width: 520px) {
+  .choices-table .col-choice { font-size: 0.75rem; min-width: 70px; }
+  .choices-table .col-reason { font-size: 0.75rem; }
+  .choices-table td { padding: 10px 8px; }
+  .choices-table th { padding: 8px; font-size: 0.7rem; }
+  .result-line { font-size: 0.8rem; }
+  .result-line .result-choice { font-size: 0.8rem; }
+}
+
+/* ===== AUDIO BUTTONS ===== */
+.audio-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(56,189,176,0.3);
+  background: rgba(56,189,176,0.08);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.speak-btn:hover { background: rgba(56,189,176,0.15); border-color: rgba(56,189,176,0.5); }
+.speak-btn.speaking {
+  background: rgba(56,189,176,0.2);
+  border-color: var(--accent);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,176,0.2); }
+  50% { box-shadow: 0 0 12px 2px rgba(56,189,176,0.3); }
+}
+.speak-btn svg { flex-shrink: 0; }
+.speak-btn-note {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+}
+.speak-btn-note:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+/* Navigation Controls */
+.quiz-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  min-height: 44px;
+}
+.nav-btn:hover { background: var(--bg-card-hover); border-color: rgba(255,255,255,0.15); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-btn svg { width: 16px; height: 16px; }
+.nav-counter {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Question Grid Button */
+.grid-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 16px;
+}
+.grid-toggle-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.15); }
+
+/* Question Grid / Map */
+.question-grid {
+  display: none;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  animation: slideUp 200ms ease;
+}
+.question-grid.open { display: flex; }
+.q-grid-item {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font);
+}
+.q-grid-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.q-grid-item.current { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.q-grid-item.answered-correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct); }
+.q-grid-item.answered-wrong { background: var(--incorrect-bg); border-color: var(--incorrect-border); color: var(--incorrect); }
+
+/* ===== SEARCH VIEW ===== */
+.search-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color var(--transition);
+  direction: ltr;
+  text-align: left;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--border-focus); }
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+.search-results-count {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.search-result-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.search-result-item:hover { background: var(--bg-card-hover); border-color: rgba(255,255,255,0.12); }
+.search-result-chapter {
+  font-size: 0.6875rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 4px;
+  direction: ltr;
+  text-align: left;
+}
+.search-result-text {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  direction: ltr;
+  text-align: left;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.search-result-text mark {
+  background: rgba(56,189,176,0.25);
+  color: var(--accent);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* ===== BOOKMARKS VIEW ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+.empty-state svg { margin-bottom: 16px; opacity: 0.3; }
+.empty-state h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.empty-state p { font-size: 0.8125rem; color: var(--text-muted); }
+
+/* ===== SCORE VIEW ===== */
+.score-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.score-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+}
+.score-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.score-stat-value.green { color: var(--correct); }
+.score-stat-value.red { color: var(--incorrect); }
+.score-stat-value.teal { color: var(--accent); }
+.score-stat-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.score-chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.score-chapter-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+.score-chapter-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  direction: ltr;
+  text-align: left;
+}
+.score-chapter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.score-bar-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+}
+.score-bar-correct {
+  height: 100%;
+  background: var(--correct);
+  transition: width 400ms ease;
+}
+.score-bar-wrong {
+  height: 100%;
+  background: var(--incorrect);
+  transition: width 400ms ease;
+}
+.score-chapter-pct {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 40px;
+  text-align: left;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 16px;
+}
+.back-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.15); }
+
+/* ===== KEY REVIEW NOTES (MediScore Style) ===== */
+.review-notes {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  animation: slideUp 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.review-notes .review-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.review-notes .review-body {
+  font-size: 0.9rem;
+  line-height: 2.2;
+  color: var(--text-secondary);
+  direction: rtl;
+  text-align: right;
+}
+.review-notes .review-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.review-notes .review-body li {
+  padding: 5px 0;
+  padding-right: 20px;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 2;
+}
+.review-notes .review-body li::before {
+  content: '•';
+  color: var(--accent);
+  position: absolute;
+  right: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* ===== FOOTER ===== */
+.app-footer {
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+.app-footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.app-footer a:hover { color: var(--accent); }
+
+/* ===== UTILITY ===== */
+.hidden { display: none !important; }
+
+/* ===== END OF CHAPTER SUMMARY ===== */
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+  animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.summary-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.summary-card p {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.summary-score-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--correct) calc(var(--pct) * 1%),
+    var(--incorrect) calc(var(--pct) * 1%) calc((var(--pct) + var(--wrong-pct)) * 1%),
+    rgba(255,255,255,0.06) calc((var(--pct) + var(--wrong-pct)) * 1%)
+  );
+  margin: 0 auto 20px;
+  position: relative;
+}
+.summary-score-ring::after {
+  content: '';
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--bg-card);
+}
+.summary-score-inner {
+  position: relative;
+  z-index: 1;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.summary-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 20px;
+}
+.summary-stat-item {
+  text-align: center;
+}
+.summary-stat-num {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.summary-stat-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+.summary-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.summary-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid var(--border);
+  min-height: 44px;
+}
+.summary-btn-primary {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+}
+.summary-btn-primary:hover { background: var(--accent-hover); }
+.summary-btn-secondary {
+  background: none;
+  color: var(--text-primary);
+}
+.summary-btn-secondary:hover { background: var(--bg-card-hover); }
+
+/* ===== RESET BUTTON ===== */
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: 1px solid var(--incorrect-border);
+  border-radius: var(--radius-md);
+  color: var(--incorrect);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.reset-btn:hover { background: var(--incorrect-bg); }
+
+/* ===== EXPLANATION TABS ===== */
+.explanation-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.exp-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  text-align: center;
+}
+.exp-tab:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-primary);
+}
+.exp-tab.active {
+  background: rgba(56,189,176,0.12);
+  border-color: rgba(56,189,176,0.4);
+  color: var(--accent);
+}
+
+/* Tab panels */
+.exp-panel {
+  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Teacher explanation panel */
+.teacher-exp-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 16px 18px 8px;
+  line-height: 1.8;
+  border-bottom: 2px solid rgba(56,189,176,0.2);
+  margin-bottom: 8px;
+}
+.teacher-exp-body {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 2;
+  padding: 12px 18px 18px;
+  text-align: right;
+}
+
+/* Review notes panel */
+.review-notes-pro {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+}
+.review-notes-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 14px 18px 10px;
+  border-bottom: 2px solid rgba(56,189,176,0.2);
+  line-height: 1.8;
+}
+.review-group {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  line-height: 2;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.review-group:last-child { border-bottom: none; }
+.review-group strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.review-group ul {
+  margin: 0;
+  padding-right: 20px;
+  padding-left: 0;
+  list-style: disc;
+}
+.review-group ul li {
+  margin-bottom: 4px;
+  line-height: 1.9;
+}
+.positive-group {
+  border-right: 3px solid var(--correct);
+}
+.negative-group {
+  border-right: 3px solid var(--incorrect);
+}
+.review-general {
+  margin: 0;
+  padding: 14px 18px;
+  padding-right: 36px;
+  list-style: disc;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+.review-general li {
+  margin-bottom: 4px;
+}
+.review-key-tip {
+  padding: 12px 18px;
+  background: rgba(245,158,11,0.08);
+  border-top: 1px solid rgba(245,158,11,0.2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f59e0b;
+  line-height: 1.9;
+}
+
+@media (max-width: 520px) {
+  .explanation-tabs { gap: 4px; padding: 8px 10px; }
+  .exp-tab { font-size: 0.7rem; padding: 8px 6px; }
+  .teacher-exp-title { font-size: 0.9rem; padding: 12px 14px 6px; }
+  .teacher-exp-body { font-size: 0.82rem; padding: 10px 14px 14px; }
+  .review-notes-title { font-size: 0.85rem; padding: 12px 14px 8px; }
+  .review-group { padding: 10px 14px; font-size: 0.8rem; }
+  .review-general { padding: 10px 14px; font-size: 0.8rem; }
+  .review-key-tip { padding: 10px 14px; font-size: 0.8rem; }
+}
+
+/* ===== QUESTION EXPLAIN BUTTON ===== */
+.q-explain-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(168,85,247,0.35);
+  background: rgba(168,85,247,0.08);
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.q-explain-btn:hover {
+  background: rgba(168,85,247,0.15);
+  border-color: rgba(168,85,247,0.5);
+}
+.q-explain-btn.active {
+  background: rgba(168,85,247,0.18);
+  border-color: rgba(168,85,247,0.5);
+  color: #d8b4fe;
+}
+.q-explain-panel {
+  margin-top: 12px;
+  padding: 16px 18px;
+  background: rgba(168,85,247,0.06);
+  border: 1px solid rgba(168,85,247,0.2);
+  border-radius: var(--radius-lg);
+  border-right: 3px solid #a855f7;
+  animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.q-explain-content {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 2.1;
+  text-align: right;
+}
+@media (max-width: 520px) {
+  .q-explain-btn { font-size: 0.75rem; padding: 7px 12px; }
+  .q-explain-content { font-size: 0.82rem; }
+}
+</style>
 </head>
-<body><p>Loading...</p>
+<body>
+
+<div class="app">
+  <!-- Sidebar (Desktop) -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="7" fill="rgba(56,189,176,0.15)"/>
+        <path d="M9 14.5L13 18.5L19 10.5" stroke="#38bdb0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>مراجعة التخدير</span>
+    </div>
+    <button class="sidebar-item active" onclick="navigateTo('chapters')" data-nav="chapters">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      الفصول
+    </button>
+    <button class="sidebar-item" onclick="navigateTo('quiz')" data-nav="quiz">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      الاختبار
+    </button>
+    <button class="sidebar-item" onclick="navigateTo('search')" data-nav="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      البحث
+    </button>
+    <button class="sidebar-item" onclick="navigateTo('bookmarks')" data-nav="bookmarks">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      المحفوظات
+    </button>
+    <button class="sidebar-item" onclick="navigateTo('score')" data-nav="score">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      النتائج
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- ===== CHAPTERS VIEW ===== -->
+    <div class="view active" id="view-chapters">
+      <div class="page-header">
+        <h1>البورد الأردني - التخدير</h1>
+        <p>الجزء الأول - 600 سؤال اختيار من متعدد</p>
+      </div>
+
+      <button class="all-questions-btn" onclick="startQuiz('all')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        جميع الأسئلة (600)
+      </button>
+
+      <div class="chapter-grid" id="chapter-grid"></div>
+
+      <footer class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+      </footer>
+    </div>
+
+    <!-- ===== QUIZ VIEW ===== -->
+    <div class="view" id="view-quiz">
+      <button class="back-btn" onclick="navigateTo('chapters')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        العودة للفصول
+      </button>
+
+      <div class="quiz-header">
+        <div class="quiz-top-bar">
+          <span class="quiz-chapter-label" id="quiz-chapter-label"></span>
+          <span class="quiz-score-badge" id="quiz-score-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <span id="running-score">0%</span>
+          </span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
+        <div class="progress-label" id="quiz-progress-label"></div>
+      </div>
+
+      <button class="grid-toggle-btn" id="grid-toggle" onclick="toggleGrid()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        خريطة الأسئلة
+      </button>
+      <div class="question-grid" id="question-grid"></div>
+
+      <div id="question-container"></div>
+
+      <div class="quiz-nav">
+        <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          السابق
+        </button>
+        <span class="nav-counter" id="nav-counter"></span>
+        <button class="nav-btn" id="next-btn" onclick="nextQuestion()">
+          التالي
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== SEARCH VIEW ===== -->
+    <div class="view" id="view-search">
+      <div class="page-header">
+        <h1>البحث</h1>
+        <p>ابحث في جميع الأسئلة بكلمة مفتاحية</p>
+      </div>
+      <div class="search-container">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Search questions (e.g., sevoflurane, intubation, epidural)..." oninput="handleSearch()">
+      </div>
+      <div class="search-results-count" id="search-results-count"></div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- ===== BOOKMARKS VIEW ===== -->
+    <div class="view" id="view-bookmarks">
+      <div class="page-header">
+        <h1>المحفوظات</h1>
+        <p>الأسئلة المحفوظة للمراجعة لاحقاً</p>
+      </div>
+      <div id="bookmarks-container"></div>
+    </div>
+
+    <!-- ===== SCORE VIEW ===== -->
+    <div class="view" id="view-score">
+      <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          <h1>النتائج</h1>
+          <p>ملخص أدائك في الجلسة الحالية</p>
+        </div>
+        <button class="reset-btn" onclick="resetAllScores()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg>
+          إعادة تعيين
+        </button>
+      </div>
+      <div class="score-overview" id="score-overview"></div>
+      <div class="score-chapter-list" id="score-chapter-list"></div>
+    </div>
+  </main>
+
+  <!-- Bottom Nav (Mobile) -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-item active" onclick="navigateTo('chapters')" data-nav="chapters">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      الفصول
+    </button>
+    <button class="nav-item" onclick="navigateTo('search')" data-nav="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      البحث
+    </button>
+    <button class="nav-item" onclick="navigateTo('bookmarks')" data-nav="bookmarks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      المحفوظات
+    </button>
+    <button class="nav-item" onclick="navigateTo('score')" data-nav="score">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      النتائج
+    </button>
+  </nav>
+</div>
+
 <script src="data.js"></script>
+<script>
+// ===== APP STATE =====
+const state = {
+  currentView: 'chapters',
+  currentChapter: null,       // null = all, or chapter string
+  quizQuestions: [],
+  currentIndex: 0,
+  answers: {},                // { globalIndex: { selected, correct } }
+  bookmarks: new Set(),
+  gridOpen: false,
+};
+
+const CHAPTERS = [
+  { key: 'Chapter 1: Physics, Chemistry, and Mathematics', name: 'Physics, Chemistry, and Mathematics', num: 1 },
+  { key: 'Chapter 2: Anesthesia Equipment', name: 'Anesthesia Equipment', num: 2 },
+  { key: 'Chapter 3: Circulation', name: 'Circulation', num: 3 },
+  { key: 'Chapter 4: Respiration', name: 'Respiration', num: 4 },
+  { key: 'Chapter 5: Nervous System', name: 'Nervous System', num: 5 },
+  { key: 'Chapter 6: Renal, Hepatic, Endocrine, Hematologic, and Metabolic Systems', name: 'Renal, Hepatic, Endocrine, Hematologic, and Metabolic Systems', num: 6 },
+  { key: 'Chapter 7: Pharmacology', name: 'Pharmacology', num: 7 },
+  { key: 'Chapter 8: General Anesthesia', name: 'General Anesthesia', num: 8 },
+  { key: 'Chapter 9: Regional Anesthesia', name: 'Regional Anesthesia', num: 9 },
+];
+
+// Build a global index map: each question gets a unique index
+const allQuestions = QUESTIONS_DATA.map((q, i) => ({ ...q, globalIndex: i }));
+
+// Audio base URL - change to '' for local hosting with audio/ folder, or use CDN URL
+const AUDIO_BASE_URL = 'audio/';
+
+// Audio files available (question numbers that have teacher MP3)
+const AUDIO_QUESTIONS = new Set([1,2,3,4,5,6,7,8,9,10,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,479,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523]);
+
+function getChapterQuestions(chapterKey) {
+  return allQuestions.filter(q => q.chapter === chapterKey);
+}
+
+function getChapterStats(chapterKey) {
+  const qs = chapterKey ? getChapterQuestions(chapterKey) : allQuestions;
+  let answered = 0, correct = 0;
+  qs.forEach(q => {
+    if (state.answers[q.globalIndex] !== undefined) {
+      answered++;
+      if (state.answers[q.globalIndex].correct) correct++;
+    }
+  });
+  return { total: qs.length, answered, correct, wrong: answered - correct };
+}
+
+// ===== NAVIGATION =====
+function navigateTo(view) {
+  state.currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+
+  // Update nav active states
+  document.querySelectorAll('.sidebar-item, .nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.nav === view);
+  });
+
+  if (view === 'chapters') renderChapters();
+  if (view === 'bookmarks') renderBookmarks();
+  if (view === 'score') renderScore();
+  if (view === 'quiz' && state.quizQuestions.length === 0) {
+    // If no quiz started, redirect to chapters
+    navigateTo('chapters');
+    return;
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== CHAPTERS =====
+function renderChapters() {
+  const grid = document.getElementById('chapter-grid');
+  grid.innerHTML = CHAPTERS.map(ch => {
+    const stats = getChapterStats(ch.key);
+    const pct = stats.total > 0 ? Math.round((stats.answered / stats.total) * 100) : 0;
+    return `
+      <div class="chapter-card" onclick="startQuiz('${ch.key}')">
+        <div class="chapter-card-num">${ch.num}</div>
+        <div class="chapter-card-title">${ch.name}</div>
+        <div class="chapter-card-footer">
+          <span class="chapter-card-count">${stats.total} سؤال</span>
+          <div class="chapter-card-progress">
+            <div class="progress-bar-mini">
+              <div class="progress-bar-mini-fill" style="width:${pct}%"></div>
+            </div>
+            <span class="progress-text-mini">${stats.answered}/${stats.total}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Update all-questions button with progress
+  const allStats = getChapterStats(null);
+  const allPct = allStats.total > 0 ? Math.round((allStats.answered / allStats.total) * 100) : 0;
+  document.querySelector('.all-questions-btn').innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    جميع الأسئلة (${allStats.total}) — ${allStats.answered} مُجاب (${allPct}%)
+  `;
+}
+
+// ===== QUIZ =====
+function startQuiz(chapterKey) {
+  if (chapterKey === 'all') {
+    state.currentChapter = null;
+    state.quizQuestions = [...allQuestions];
+  } else {
+    state.currentChapter = chapterKey;
+    state.quizQuestions = getChapterQuestions(chapterKey);
+  }
+  state.currentIndex = 0;
+  state.gridOpen = false;
+  navigateTo('quiz');
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const qs = state.quizQuestions;
+  const idx = state.currentIndex;
+  const q = qs[idx];
+  if (!q) return;
+
+  // Chapter label
+  const label = state.currentChapter
+    ? CHAPTERS.find(c => c.key === state.currentChapter)?.name || ''
+    : 'All Questions';
+  document.getElementById('quiz-chapter-label').textContent = label;
+
+  // Score badge
+  const stats = state.currentChapter ? getChapterStats(state.currentChapter) : getChapterStats(null);
+  const scorePct = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
+  document.getElementById('running-score').textContent = stats.answered > 0 ? scorePct + '%' : '—';
+
+  // Progress
+  const progressPct = ((idx + 1) / qs.length) * 100;
+  document.getElementById('quiz-progress').style.width = progressPct + '%';
+  document.getElementById('quiz-progress-label').textContent = `Question ${idx + 1} of ${qs.length}`;
+
+  // Nav counter
+  document.getElementById('nav-counter').textContent = `${idx + 1} / ${qs.length}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === qs.length - 1;
+
+  // Show summary button if all questions answered OR on last question and answered
+  const allAnswered = checkEndOfChapter();
+  const isLastAndAnswered = idx === qs.length - 1 && state.answers[q.globalIndex] !== undefined;
+  let summaryBtnEl = document.getElementById('summary-btn-nav');
+  if (!summaryBtnEl) {
+    summaryBtnEl = document.createElement('button');
+    summaryBtnEl.id = 'summary-btn-nav';
+    summaryBtnEl.className = 'nav-btn';
+    summaryBtnEl.style.background = 'var(--accent)';
+    summaryBtnEl.style.color = 'var(--bg-primary)';
+    summaryBtnEl.style.borderColor = 'var(--accent)';
+    summaryBtnEl.textContent = '\u0639\u0631\u0636 \u0627\u0644\u0646\u062a\u0627\u0626\u062c';
+    summaryBtnEl.onclick = showEndSummary;
+    document.querySelector('.quiz-nav').appendChild(summaryBtnEl);
+  }
+  summaryBtnEl.style.display = (allAnswered || isLastAndAnswered) ? 'inline-flex' : 'none';
+
+  // Check if already answered
+  const existingAnswer = state.answers[q.globalIndex];
+
+  // Build question HTML
+  const choiceKeys = Object.keys(q.choices);
+  let choicesHtml = choiceKeys.map(key => {
+    let cls = 'choice-btn';
+    if (existingAnswer) {
+      cls += ' answered';
+      if (key === q.correct_answer) cls += ' correct';
+      else if (key === existingAnswer.selected) cls += ' incorrect';
+    }
+    return `
+      <button class="${cls}" onclick="selectAnswer('${key}')" data-choice="${key}">
+        <span class="choice-letter">${key}</span>
+        <span class="choice-text">${q.choices[key]}</span>
+      </button>
+    `;
+  }).join('');
+
+  // Bookmark
+  const isBookmarked = state.bookmarks.has(q.globalIndex);
+
+  // Arabic translation of the question itself
+  const questionAr = q.question_ar || '';
+
+  let html = `
+    <div class="question-card">
+      <div class="question-number">Question ${q.question_number} — ${q.chapter}</div>
+      <div class="question-text">${q.question}</div>
+      <button class="q-explain-btn" onclick="toggleQuestionExplain(this)" dir="rtl">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        اشرح السؤال بالعربية
+      </button>
+      <div class="q-explain-panel" style="display:none;" dir="rtl">
+        <div class="q-explain-content">${questionAr || 'لا تتوفر ترجمة لهذا السؤال حالياً'}</div>
+      </div>
+    </div>
+    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark(${q.globalIndex})">
+      <svg viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      ${isBookmarked ? 'محفوظ' : 'حفظ'}
+    </button>
+    <div class="choices-list" id="choices-list">${choicesHtml}</div>
+  `;
+
+  // If answered, show explanation
+  if (existingAnswer) {
+    html += renderExplanation(q, existingAnswer);
+  }
+
+  document.getElementById('question-container').innerHTML = html;
+
+  // Render grid
+  renderQuestionGrid();
+}
+
+function selectAnswer(key) {
+  const q = state.quizQuestions[state.currentIndex];
+  if (state.answers[q.globalIndex] !== undefined) return;
+
+  const isCorrect = key === q.correct_answer;
+  state.answers[q.globalIndex] = { selected: key, correct: isCorrect };
+
+  // Play sound effect
+  playAnswerSound(isCorrect);
+
+  // Re-render to show result
+  renderQuiz();
+}
+
+// Parse explanation text into structured sections for colored display
+function parseExplanationSections(explanationAr, reviewNoteAr) {
+  const sections = { concept: '', trap: '', logic: '', memory: '' };
+  if (!explanationAr) return sections;
+
+  const text = explanationAr;
+  const sentences = text.split(/(?<=[.\u0964\u060C!\?]\s)/).filter(s => s.trim().length > 3);
+
+  // Heuristic: first ~40% is concept, look for trap keywords, rest is logic
+  const total = sentences.length;
+  const conceptEnd = Math.max(1, Math.ceil(total * 0.4));
+
+  const trapKeywords = /\u0641\u062e|\u062e\u0637\u0623|\u0627\u0646\u062a\u0628\u0647|\u062e\u0627\u0637\u0626|\u0644\u0627 \u064a\u0639\u0646\u064a|\u0644\u064a\u0633|\u0644\u0627 \u062a\u062e\u0644\u0637|\u062e\u0644\u0637|\u0627\u062d\u0630\u0631|trap|common mistake|not|incorrect|careful|confus/i;
+
+  let conceptParts = [];
+  let trapParts = [];
+  let logicParts = [];
+
+  sentences.forEach((s, i) => {
+    if (trapKeywords.test(s)) {
+      trapParts.push(s.trim());
+    } else if (i < conceptEnd) {
+      conceptParts.push(s.trim());
+    } else {
+      logicParts.push(s.trim());
+    }
+  });
+
+  // If no trap found, create a default trap from the wrong-answer context
+  if (trapParts.length === 0 && logicParts.length > 1) {
+    // Move last logic sentence as a general caution
+    trapParts.push(logicParts.pop());
+  }
+
+  sections.concept = conceptParts.join(' ');
+  sections.trap = trapParts.join(' ');
+  sections.logic = logicParts.join(' ');
+  sections.memory = reviewNoteAr || '';
+
+  return sections;
+}
+
+function renderExplanation(q, answer) {
+  const explanationAr = q.explanation_ar || '';
+  const explanationEn = q.explanation || '';
+  const wrongAnswersAr = q.wrong_answers_ar || {};
+  const reviewNoteAr = q.review_note_ar || '';
+  const isCorrect = answer.correct;
+  const selectedKey = answer.selected;
+  const correctKey = q.correct_answer;
+  const gi = q.globalIndex;
+  const qNum = q.question_number;
+
+  // === 1. RESULT BANNER ===
+  const bannerClass = isCorrect ? 'correct-banner' : 'wrong-banner';
+  let bannerHtml = '<div class="result-banner ' + bannerClass + '" dir="rtl">';
+
+  if (!isCorrect) {
+    bannerHtml += '<div class="result-line user-wrong">' +
+      '<span class="result-label">\u0625\u062c\u0627\u0628\u062a\u0643:</span>' +
+      '<span class="result-choice">(' + selectedKey + ') ' + q.choices[selectedKey] + '</span>' +
+      '<span class="result-icon">\u274C</span>' +
+      '<span style="color:var(--incorrect);font-weight:600;">\u062e\u0637\u0623</span>' +
+      '</div><div class="result-divider"></div>';
+  }
+
+  bannerHtml += '<div class="result-line correct-line">' +
+    '<span class="result-label">\u0627\u0644\u0625\u062c\u0627\u0628\u0629 \u0627\u0644\u0635\u062d\u064a\u062d\u0629:</span>' +
+    '<span class="result-choice">(' + correctKey + ') ' + q.choices[correctKey] + '</span>' +
+    '<span class="result-icon">\u2705</span>' +
+    (isCorrect ? '<span style="color:var(--correct);font-weight:600;">\u0635\u062d\u064a\u062d</span>' : '') +
+    '</div></div>';
+
+  // === 2. TEACHER AUDIO PLAYER (always shown) ===
+  let audioPlayerHtml = '';
+  const hasMP3 = AUDIO_QUESTIONS.has(qNum);
+  if (hasMP3) {
+    audioPlayerHtml = '<div class="teacher-audio-card" dir="rtl">' +
+      '<div class="teacher-audio-header">' +
+        '<div class="teacher-icon">\uD83C\uDF93</div>' +
+        '<div><div class="teacher-label">\u0634\u0631\u062d \u0627\u0644\u0645\u0639\u0644\u0645 \u0627\u0644\u0635\u0648\u062a\u064a</div>' +
+        '<div class="teacher-sublabel">\u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0634\u0631\u062d \u0628\u0623\u0633\u0644\u0648\u0628 \u062a\u0639\u0644\u064a\u0645\u064a</div></div>' +
+      '</div>' +
+      '<audio class="teacher-audio-player" controls preload="metadata" src="' + AUDIO_BASE_URL + 'q' + qNum + '.mp3"></audio>' +
+    '</div>';
+  } else {
+    audioPlayerHtml = '<div class="teacher-audio-card" dir="rtl">' +
+      '<div class="teacher-audio-header">' +
+        '<div class="teacher-icon">\uD83D\uDD0A</div>' +
+        '<div><div class="teacher-label">\u0627\u0644\u0634\u0631\u062d \u0627\u0644\u0635\u0648\u062a\u064a</div></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+        '<button class="speak-btn" id="speak-full-btn-' + gi + '" onclick="speakFullExplanation(' + gi + ')" style="flex:1;min-width:120px;">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>' +
+          ' \u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0634\u0631\u062d' +
+        '</button>' +
+        (reviewNoteAr ? '<button class="speak-btn speak-btn-note" id="speak-note-btn-' + gi + '" onclick="speakReviewNote(' + gi + ')" style="flex:1;min-width:120px;">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>' +
+          ' \u0627\u0633\u062a\u0645\u0639 \u0644\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a' +
+        '</button>' : '') +
+      '</div>' +
+    '</div>';
+  }
+
+  // === 3. TAB TOGGLE BUTTONS ===
+  var tabsHtml = '<div class="explanation-tabs" dir="rtl">' +
+    '<button class="exp-tab active" onclick="switchExpTab(this, \'' + gi + '\', \'teacher\')">' +
+      '\uD83C\uDF93 \u0634\u0631\u062d \u0643\u0645\u0639\u0644\u0645</button>' +
+    '<button class="exp-tab" onclick="switchExpTab(this, \'' + gi + '\', \'choices\')">' +
+      '\uD83D\uDCCB \u0634\u0631\u062d \u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a</button>' +
+    '<button class="exp-tab" onclick="switchExpTab(this, \'' + gi + '\', \'notes\')">' +
+      '\uD83D\uDCDD \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0644\u0645\u0631\u0627\u062c\u0639\u0629</button>' +
+  '</div>';
+
+  // === 4. TAB: TEACHER EXPLANATION (شرح كمعلم) ===
+  var teacherHtml = '<div class="exp-panel" id="exp-teacher-' + gi + '" dir="rtl">';
+
+  // Title
+  var teacherTitle = q.choices[correctKey] || '';
+  teacherHtml += '<div class="teacher-exp-title">\uD83C\uDF93 \u0634\u0631\u062d \u0643\u0645\u0639\u0644\u0645 \u2014 ' + teacherTitle + '</div>';
+
+  // Main explanation as narrative paragraphs
+  if (explanationAr) {
+    teacherHtml += '<div class="teacher-exp-body">' + explanationAr + '</div>';
+  }
+
+  // English toggle
+  if (explanationEn) {
+    teacherHtml += '<details class="en-explanation-toggle" style="margin-top:12px;"><summary>\uD83C\uDDEC\uD83C\uDDE7 Show English Explanation</summary>' +
+      '<div class="en-text" dir="ltr" style="margin-top:8px;">' + explanationEn + '</div></details>';
+  }
+  teacherHtml += '</div>';
+
+  // === 5. TAB: CHOICES TABLE (شرح الخيارات) ===
+  var choiceKeys = Object.keys(q.choices);
+  var tableRows = choiceKeys.map(function(key) {
+    var isCorrectKey = key === correctKey;
+    var rowClass = isCorrectKey ? 'correct-row' : '';
+    var verdictHtml, reasonHtml;
+    if (isCorrectKey) {
+      verdictHtml = '<td class="col-verdict is-correct">\u2705 \u064a\u064f\u0642\u0627\u0633 \u2014<br>\u0635\u062d\u064a\u062d</td>';
+      reasonHtml = wrongAnswersAr[key] || '\u0647\u0630\u0627 \u0647\u0648 \u0627\u0644\u062e\u064a\u0627\u0631 \u0627\u0644\u0635\u062d\u064a\u062d';
+    } else {
+      verdictHtml = '<td class="col-verdict is-wrong">\u274C \u0644\u0627 \u064a\u064f\u0642\u0627\u0633 \u2014<br>\u0647\u0648 \u0627\u0644\u0627\u0633\u062a\u062b\u0646\u0627\u0621</td>';
+      reasonHtml = wrongAnswersAr[key] || '\u0625\u062c\u0627\u0628\u0629 \u062e\u0627\u0637\u0626\u0629';
+    }
+    return '<tr class="' + rowClass + '">' +
+      '<td class="col-choice" dir="ltr"><strong>' + q.choices[key] + ' (' + key + ')</strong></td>' +
+      verdictHtml +
+      '<td class="col-reason">' + reasonHtml + '</td>' +
+    '</tr>';
+  }).join('');
+
+  var choicesHtml = '<div class="exp-panel" id="exp-choices-' + gi + '" style="display:none;">' +
+    '<div class="choices-explanation-card">' +
+      '<div class="section-header" dir="rtl">\uD83D\uDCCB \u0634\u0631\u062d \u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a</div>' +
+      '<table class="choices-table"><thead><tr>' +
+        '<th dir="rtl">\u0627\u0644\u062e\u064a\u0627\u0631</th>' +
+        '<th>\u0627\u0644\u062d\u0643\u0645</th>' +
+        '<th dir="rtl">\u0627\u0644\u0633\u0628\u0628</th>' +
+      '</tr></thead><tbody>' + tableRows + '</tbody></table>' +
+    '</div></div>';
+
+  // === 6. TAB: REVIEW NOTES (ملاحظات للمراجعة) ===
+  var notesContent = '';
+  if (reviewNoteAr) {
+    // Parse review note into structured content
+    var noteText = reviewNoteAr;
+    var formattedSections = '';
+
+    // Split into sentences for structured display
+    var noteSentences = noteText.split(/(?<=[\.\u060C!\?])\s+/).filter(function(s) { return s.trim().length > 3; });
+
+    // Group into positive (✅) and negative (❌) and general bullet points
+    var positives = [];
+    var negatives = [];
+    var general = [];
+    var keyTip = '';
+
+    noteSentences.forEach(function(s) {
+      var trimmed = s.trim();
+      if (/\u062a\u0630\u0643\u0631|\u0645\u0647\u0645|\u0627\u062d\u0641\u0638|remember|key|important/i.test(trimmed)) {
+        keyTip = trimmed;
+      } else if (/\u0644\u0627 \u064a|\u0644\u0627 \u062a|\u0644\u064a\u0633|\u0644\u0627 \u064a\u0645\u0643\u0646|not|cannot|never|except/i.test(trimmed)) {
+        negatives.push(trimmed);
+      } else if (/\u064a\u064f\u0642\u0627\u0633|\u064a\u0645\u0643\u0646|\u064a\u0633\u062a\u062e\u062f\u0645|can|measure|use/i.test(trimmed)) {
+        positives.push(trimmed);
+      } else {
+        general.push(trimmed);
+      }
+    });
+
+    // Build the review notes HTML
+    notesContent += '<div class="review-notes-pro" dir="rtl">';
+    notesContent += '<div class="review-notes-title">\uD83D\uDCDD \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0644\u0645\u0631\u0627\u062c\u0639\u0629 \u2014 ' + (q.choices[correctKey] || '').substring(0, 40) + '</div>';
+
+    if (positives.length > 0) {
+      notesContent += '<div class="review-group positive-group">\u2705 <strong>\u0646\u0642\u0627\u0637 \u0623\u0633\u0627\u0633\u064a\u0629:</strong><ul>';
+      positives.forEach(function(p) { notesContent += '<li>' + p + '</li>'; });
+      notesContent += '</ul></div>';
+    }
+
+    if (negatives.length > 0) {
+      notesContent += '<div class="review-group negative-group">\u274C <strong>\u0627\u0646\u062a\u0628\u0647 \u2014 \u0627\u0633\u062a\u062b\u0646\u0627\u0621\u0627\u062a:</strong><ul>';
+      negatives.forEach(function(n) { notesContent += '<li>' + n + '</li>'; });
+      notesContent += '</ul></div>';
+    }
+
+    if (general.length > 0) {
+      notesContent += '<ul class="review-general">';
+      general.forEach(function(g) { notesContent += '<li>' + g + '</li>'; });
+      notesContent += '</ul>';
+    }
+
+    if (keyTip) {
+      notesContent += '<div class="review-key-tip">\uD83D\uDD11 ' + keyTip + '</div>';
+    }
+
+    notesContent += '</div>';
+  } else {
+    notesContent = '<div class="review-notes-pro" dir="rtl" style="text-align:center;padding:24px;color:var(--text-muted);">\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0647\u0630\u0627 \u0627\u0644\u0633\u0624\u0627\u0644</div>';
+  }
+
+  var notesHtml = '<div class="exp-panel" id="exp-notes-' + gi + '" style="display:none;">' + notesContent + '</div>';
+
+  return bannerHtml + audioPlayerHtml + tabsHtml + teacherHtml + choicesHtml + notesHtml;
+}
+
+// ===== QUESTION GRID =====
+function toggleQuestionExplain(btn) {
+  var panel = btn.nextElementSibling;
+  if (!panel) return;
+  var isVisible = panel.style.display !== 'none';
+  panel.style.display = isVisible ? 'none' : 'block';
+  btn.classList.toggle('active', !isVisible);
+}
+
+function switchExpTab(btn, gi, tabName) {
+  // Toggle active class on buttons
+  var tabsContainer = btn.parentElement;
+  var allBtns = tabsContainer.querySelectorAll('.exp-tab');
+  for (var i = 0; i < allBtns.length; i++) {
+    allBtns[i].classList.remove('active');
+  }
+  btn.classList.add('active');
+  // Show/hide panels
+  var panels = ['teacher', 'choices', 'notes'];
+  for (var j = 0; j < panels.length; j++) {
+    var panel = document.getElementById('exp-' + panels[j] + '-' + gi);
+    if (panel) {
+      panel.style.display = panels[j] === tabName ? 'block' : 'none';
+    }
+  }
+}
+
+function toggleGrid() {
+  state.gridOpen = !state.gridOpen;
+  document.getElementById('question-grid').classList.toggle('open', state.gridOpen);
+}
+
+function renderQuestionGrid() {
+  const grid = document.getElementById('question-grid');
+  grid.innerHTML = state.quizQuestions.map((q, i) => {
+    let cls = 'q-grid-item';
+    if (i === state.currentIndex) cls += ' current';
+    const ans = state.answers[q.globalIndex];
+    if (ans) cls += ans.correct ? ' answered-correct' : ' answered-wrong';
+    return `<button class="${cls}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
+  }).join('');
+}
+
+function jumpToQuestion(idx) {
+  stopSpeechOnNav();
+  state.currentIndex = idx;
+  state.gridOpen = false;
+  document.getElementById('question-grid').classList.remove('open');
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextQuestion() {
+  stopSpeechOnNav();
+  if (state.currentIndex < state.quizQuestions.length - 1) {
+    state.currentIndex++;
+    renderQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function prevQuestion() {
+  stopSpeechOnNav();
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    renderQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ===== BOOKMARKS =====
+function toggleBookmark(globalIndex) {
+  if (state.bookmarks.has(globalIndex)) {
+    state.bookmarks.delete(globalIndex);
+  } else {
+    state.bookmarks.add(globalIndex);
+  }
+  if (state.currentView === 'quiz') renderQuiz();
+  if (state.currentView === 'bookmarks') renderBookmarks();
+}
+
+function renderBookmarks() {
+  const container = document.getElementById('bookmarks-container');
+  if (state.bookmarks.size === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+        <h3>لا توجد محفوظات</h3>
+        <p>احفظ الأسئلة أثناء المراجعة لتظهر هنا</p>
+      </div>
+    `;
+    return;
+  }
+
+  const bookmarkedQs = [...state.bookmarks].map(gi => allQuestions[gi]);
+  container.innerHTML = bookmarkedQs.map(q => `
+    <div class="search-result-item" onclick="jumpToBookmarked(${q.globalIndex})">
+      <div class="search-result-chapter">Q${q.question_number} — ${q.chapter}</div>
+      <div class="search-result-text">${q.question.substring(0, 120)}${q.question.length > 120 ? '...' : ''}</div>
+    </div>
+  `).join('');
+}
+
+function jumpToBookmarked(globalIndex) {
+  // Find which chapter this question belongs to
+  state.currentChapter = null;
+  state.quizQuestions = [...allQuestions];
+  state.currentIndex = globalIndex;
+  navigateTo('quiz');
+  renderQuiz();
+}
+
+// ===== SEARCH =====
+let searchTimeout;
+function handleSearch() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(doSearch, 200);
+}
+
+function doSearch() {
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+  const resultsContainer = document.getElementById('search-results');
+  const countContainer = document.getElementById('search-results-count');
+
+  if (query.length < 2) {
+    resultsContainer.innerHTML = '';
+    countContainer.textContent = '';
+    return;
+  }
+
+  const results = allQuestions.filter(q =>
+    q.question.toLowerCase().includes(query) ||
+    Object.values(q.choices).some(c => c.toLowerCase().includes(query)) ||
+    (q.explanation && q.explanation.toLowerCase().includes(query))
+  ).slice(0, 50);
+
+  countContainer.textContent = `${results.length} نتيجة${results.length >= 50 ? ' (أول 50)' : ''}`;
+
+  resultsContainer.innerHTML = results.map(q => {
+    const highlighted = highlightText(q.question, query);
+    return `
+      <div class="search-result-item" onclick="jumpFromSearch(${q.globalIndex})">
+        <div class="search-result-chapter">Q${q.question_number} — ${q.chapter}</div>
+        <div class="search-result-text">${highlighted}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function highlightText(text, query) {
+  const truncated = text.substring(0, 200);
+  const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+  return truncated.replace(regex, '<mark>$1</mark>') + (text.length > 200 ? '...' : '');
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function jumpFromSearch(globalIndex) {
+  state.currentChapter = null;
+  state.quizQuestions = [...allQuestions];
+  state.currentIndex = globalIndex;
+  navigateTo('quiz');
+  renderQuiz();
+}
+
+// ===== SCORE =====
+function renderScore() {
+  const allStats = getChapterStats(null);
+  const pct = allStats.answered > 0 ? Math.round((allStats.correct / allStats.answered) * 100) : 0;
+
+  document.getElementById('score-overview').innerHTML = `
+    <div class="score-stat">
+      <div class="score-stat-value teal">${allStats.answered}</div>
+      <div class="score-stat-label">مُجاب</div>
+    </div>
+    <div class="score-stat">
+      <div class="score-stat-value green">${allStats.correct}</div>
+      <div class="score-stat-label">صحيح</div>
+    </div>
+    <div class="score-stat">
+      <div class="score-stat-value red">${allStats.wrong}</div>
+      <div class="score-stat-label">خطأ</div>
+    </div>
+  `;
+
+  document.getElementById('score-chapter-list').innerHTML = CHAPTERS.map(ch => {
+    const stats = getChapterStats(ch.key);
+    const chPct = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
+    const correctWidth = stats.total > 0 ? (stats.correct / stats.total) * 100 : 0;
+    const wrongWidth = stats.total > 0 ? (stats.wrong / stats.total) * 100 : 0;
+    return `
+      <div class="score-chapter-item">
+        <div class="score-chapter-name">Ch ${ch.num}: ${ch.name}</div>
+        <div class="score-chapter-bar">
+          <div class="score-bar-track">
+            <div class="score-bar-correct" style="width:${correctWidth}%"></div>
+            <div class="score-bar-wrong" style="width:${wrongWidth}%"></div>
+          </div>
+          <span class="score-chapter-pct">${stats.answered > 0 ? chPct + '%' : '—'}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetAllScores() {
+  state.answers = {};
+  state.bookmarks = new Set();
+  renderScore();
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', e => {
+  if (state.currentView === 'quiz') {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextQuestion();
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prevQuestion();
+    } else if (['a','b','c','d','e','A','B','C','D','E'].includes(e.key)) {
+      selectAnswer(e.key.toUpperCase());
+    }
+  }
+  if (state.currentView === 'search' && e.key === '/') {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+});
+
+// ===== TOUCH SWIPE SUPPORT =====
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  if (state.currentView === 'quiz' && Math.abs(diff) > 60) {
+    if (diff > 0) nextQuestion();  // swipe left = next
+    else prevQuestion();           // swipe right = prev
+  }
+}, { passive: true });
+
+// ===== END OF CHAPTER DETECTION =====
+function checkEndOfChapter() {
+  if (!state.quizQuestions.length) return false;
+  const qs = state.quizQuestions;
+  const allAnswered = qs.every(q => state.answers[q.globalIndex] !== undefined);
+  return allAnswered;
+}
+
+// Override nextQuestion to check for end
+const _origNext = nextQuestion;
+
+function showEndSummary() {
+  const qs = state.quizQuestions;
+  let correct = 0, wrong = 0, unanswered = 0;
+  qs.forEach(q => {
+    const ans = state.answers[q.globalIndex];
+    if (!ans) unanswered++;
+    else if (ans.correct) correct++;
+    else wrong++;
+  });
+  const answered = correct + wrong;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  const wrongPct = answered > 0 ? Math.round((wrong / answered) * 100) : 0;
+  const label = state.currentChapter
+    ? CHAPTERS.find(c => c.key === state.currentChapter)?.name || 'Quiz'
+    : 'All Questions';
+
+  let grade = '';
+  let gradeColor = '';
+  if (pct >= 90) { grade = 'Excellent! 🎉'; gradeColor = 'var(--correct)'; }
+  else if (pct >= 75) { grade = 'Good Job! 👍'; gradeColor = 'var(--accent)'; }
+  else if (pct >= 60) { grade = 'Keep Going! 📚'; gradeColor = 'var(--warning)'; }
+  else { grade = 'Needs Review 🔄'; gradeColor = 'var(--incorrect)'; }
+
+  document.getElementById('question-container').innerHTML = `
+    <div class="summary-card">
+      <h2 style="color:${gradeColor}">${grade}</h2>
+      <p style="direction:ltr;text-align:center">${label}</p>
+      <div class="summary-score-ring" style="--pct:${pct};--wrong-pct:${wrongPct}">
+        <span class="summary-score-inner">${pct}%</span>
+      </div>
+      <div class="summary-stats">
+        <div class="summary-stat-item">
+          <div class="summary-stat-num" style="color:var(--correct)">${correct}</div>
+          <div class="summary-stat-label">صحيح</div>
+        </div>
+        <div class="summary-stat-item">
+          <div class="summary-stat-num" style="color:var(--incorrect)">${wrong}</div>
+          <div class="summary-stat-label">خطأ</div>
+        </div>
+        <div class="summary-stat-item">
+          <div class="summary-stat-num" style="color:var(--text-secondary)">${unanswered}</div>
+          <div class="summary-stat-label">لم يُجب</div>
+        </div>
+      </div>
+      <div class="summary-actions">
+        <button class="summary-btn summary-btn-primary" onclick="navigateTo('chapters')">العودة للفصول</button>
+        <button class="summary-btn summary-btn-secondary" onclick="reviewWrong()">مراجعة الإجابات الخاطئة</button>
+      </div>
+    </div>
+  `;
+}
+
+function reviewWrong() {
+  const wrongQs = state.quizQuestions.filter(q => {
+    const ans = state.answers[q.globalIndex];
+    return ans && !ans.correct;
+  });
+  if (wrongQs.length === 0) {
+    alert('لا توجد إجابات خاطئة! 🎉');
+    return;
+  }
+  state.quizQuestions = wrongQs;
+  state.currentIndex = 0;
+  state.currentChapter = null;
+  renderQuiz();
+}
+
+// ===== AUDIO SYSTEM =====
+
+// Web Audio API context (created on first interaction)
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+// Play correct/wrong sound effects
+function playAnswerSound(isCorrect) {
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    
+    if (isCorrect) {
+      // Happy chime: two ascending tones
+      playTone(ctx, 523.25, 0.15, 0, 'sine', 0.3);  // C5
+      playTone(ctx, 659.25, 0.15, 0.12, 'sine', 0.3); // E5
+      playTone(ctx, 783.99, 0.25, 0.24, 'sine', 0.35); // G5
+    } else {
+      // Error buzz: low descending tone
+      playTone(ctx, 300, 0.15, 0, 'sawtooth', 0.15);
+      playTone(ctx, 200, 0.25, 0.12, 'sawtooth', 0.12);
+    }
+  } catch(e) { /* Audio not supported */ }
+}
+
+function playTone(ctx, freq, duration, delay, type, volume) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, ctx.currentTime + delay);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime + delay);
+  osc.stop(ctx.currentTime + delay + duration + 0.05);
+}
+
+// ===== TEXT-TO-SPEECH (Arabic) =====
+let currentUtterance = null;
+let isSpeaking = false;
+
+function speakArabic(text, buttonEl) {
+  // Stop if already speaking
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    if (buttonEl) updateSpeakButton(buttonEl, false);
+    return;
+  }
+  
+  // Clean text for speech: remove HTML tags, emojis, special chars
+  let cleanText = text
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[\u2705\u274C\u26A0\u2022\u25CF\u2192\u2190\u2191\u2193\u2194\u2195\u2714\u2716]/g, '')
+    .replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+/g, '')
+    .replace(/[\u2600-\u27FF]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  if (!cleanText) return;
+  
+  // Use Web Speech API
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  utterance.lang = 'ar';
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+  
+  // Find an Arabic voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const arVoice = voices.find(v => v.lang.startsWith('ar'));
+  if (arVoice) utterance.voice = arVoice;
+  
+  utterance.onstart = () => {
+    isSpeaking = true;
+    if (buttonEl) updateSpeakButton(buttonEl, true);
+  };
+  utterance.onend = () => {
+    isSpeaking = false;
+    if (buttonEl) updateSpeakButton(buttonEl, false);
+  };
+  utterance.onerror = () => {
+    isSpeaking = false;
+    if (buttonEl) updateSpeakButton(buttonEl, false);
+  };
+  
+  window.speechSynthesis.cancel();
+  currentUtterance = utterance;
+  window.speechSynthesis.speak(utterance);
+}
+
+function updateSpeakButton(btn, playing) {
+  if (playing) {
+    btn.classList.add('speaking');
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> إيقاف`;
+  } else {
+    btn.classList.remove('speaking');
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> استمع`;
+  }
+}
+
+function speakFullExplanation(qIndex) {
+  const q = allQuestions[qIndex];
+  if (!q) return;
+  
+  const btn = document.getElementById('speak-full-btn-' + qIndex);
+  
+  // Build a comprehensive speech text
+  let speechParts = [];
+  
+  // Question explanation
+  if (q.explanation_ar) {
+    speechParts.push('شرح السؤال: ' + q.explanation_ar);
+  }
+  
+  // Correct answer
+  speechParts.push('الإجابة الصحيحة هي: ' + q.correct_answer + '. ' + q.choices[q.correct_answer]);
+  
+  // Wrong answers briefly
+  if (q.wrong_answers_ar) {
+    const wrongKeys = Object.keys(q.wrong_answers_ar).filter(k => k !== q.correct_answer);
+    if (wrongKeys.length > 0) {
+      speechParts.push('أما بقية الخيارات:');
+      wrongKeys.forEach(k => {
+        if (q.wrong_answers_ar[k]) {
+          speechParts.push(k + ': ' + q.wrong_answers_ar[k]);
+        }
+      });
+    }
+  }
+  
+  // Review note
+  if (q.review_note_ar) {
+    speechParts.push('ملاحظة للمراجعة: ' + q.review_note_ar);
+  }
+  
+  speakArabic(speechParts.join('. '), btn);
+}
+
+function speakReviewNote(qIndex) {
+  const q = allQuestions[qIndex];
+  if (!q || !q.review_note_ar) return;
+  const btn = document.getElementById('speak-note-btn-' + qIndex);
+  speakArabic(q.review_note_ar, btn);
+}
+
+// Stop speech when navigating
+const origNavigateTo = navigateTo;
+naviggateTo_wrapped = false;
+function stopSpeechOnNav() {
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+  }
+  // Also stop any playing audio elements (teacher MP3s)
+  document.querySelectorAll('.teacher-audio-player').forEach(function(el) {
+    el.pause();
+    el.currentTime = 0;
+  });
+}
+
+// Preload voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+// ===== INIT =====
+renderChapters();
+
+// Hash routing for direct links
+if (window.location.hash) {
+  const hash = window.location.hash.substring(1);
+  if (hash.startsWith('quiz-ch')) {
+    const chNum = parseInt(hash.replace('quiz-ch', ''));
+    const ch = CHAPTERS.find(c => c.num === chNum);
+    if (ch) startQuiz(ch.key);
+  } else if (hash === 'quiz-all') {
+    startQuiz('all');
+  } else if (['search','bookmarks','score'].includes(hash)) {
+    navigateTo(hash);
+  }
+}
+</script>
 </body>
 </html>
